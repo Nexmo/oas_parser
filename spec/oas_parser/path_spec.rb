@@ -4,6 +4,12 @@ RSpec.describe OasParser::Path do
     @path = @definition.paths[0]
   end
 
+  describe '#definition' do
+    it 'returns the parent definition' do
+      expect(@path.definition).to eq(@definition)
+    end
+  end
+
   describe '#path' do
     it 'returns the path' do
       expect(@path.path).to eq('/pets')

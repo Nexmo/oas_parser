@@ -12,7 +12,9 @@ module OasParser
     end
 
     def paths
-      raw['paths'].map { |path, definition| OasParser::Path.new(path, definition) }
+      raw['paths'].map do |path, definition|
+        OasParser::Path.new(self, path, definition)
+      end
     end
 
     def endpoints
