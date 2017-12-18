@@ -22,4 +22,18 @@ RSpec.describe OasParser::Definition do
       expect(@endpoint.method).to eq('get')
     end
   end
+
+  describe '#description' do
+    it 'returns the endpoint description' do
+      expect(@endpoint.description).to include('Returns all pets from the system')
+    end
+  end
+
+  describe '#parameters' do
+    it 'returns the endpoint parameters' do
+      allow(@path).to receive(:raw) {{ 'parameters' => [{}] }}
+      expect(@endpoint.parameters.count).to eq(3)
+      expect(@endpoint.parameters[0].class).to eq(OasParser::Parameter)
+    end
+  end
 end

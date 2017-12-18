@@ -22,7 +22,7 @@ RSpec.describe OasParser::Path do
     end
 
     it 'ignores keys that are not methods' do
-      allow(@path).to receive(:raw) {{ 'get' => {}, 'post' => {}, 'parameters' => {} }}
+      allow(@path).to receive(:raw) {{ 'get' => {}, 'post' => {}, 'parameters' => [{}] }}
       expect(@path.endpoints.count).to eq(2)
     end
   end
@@ -31,6 +31,14 @@ RSpec.describe OasParser::Path do
     it 'ignores keys that are not methods' do
       allow(@path).to receive(:path) { '/pets/{category}/{subcategory}' }
       expect(@path.parameter_keys).to eq(%w[category subcategory])
+    end
+  end
+
+  describe '#parameters' do
+    it 'returns the path parameters' do
+      allow(@path).to receive(:raw) {{ 'get' => {}, 'post' => {}, 'parameters' => [{}] }}
+      expect(@path.parameters.count).to eq(1)
+      expect(@path.parameters[0].class).to eq(OasParser::Parameter)
     end
   end
 end

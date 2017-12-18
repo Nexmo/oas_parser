@@ -17,8 +17,6 @@ RSpec.describe OasParser::Definition do
 
   describe '#endpoints' do
     it 'returns the spec endpoints' do
-      puts @definition.endpoints
-
       expect(@definition.endpoints.count).to eq(4)
       expect(@definition.endpoints[0].class).to eq(OasParser::Endpoint)
     end

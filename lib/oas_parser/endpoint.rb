@@ -1,5 +1,8 @@
 module OasParser
   class Endpoint
+    include OasParser::RawAccessor
+    raw_keys :description, :summary, :operationId, :tags, :required
+
     attr_accessor :path, :method, :raw
 
     def initialize(path, method, raw)
@@ -10,6 +13,18 @@ module OasParser
 
     def definition
       path.definition
+    end
+
+    def parameters
+      local_parameters + path.parameters
+    end
+
+    private
+
+    def local_parameters
+      raw['parameters'].map do |definition|
+        OasParser::Parameter.new(self, definition)
+      end
     end
   end
 end

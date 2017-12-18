@@ -20,5 +20,12 @@ module OasParser
     def parameter_keys
       path.scan(/{(.+?)}/).flatten
     end
+
+    def parameters
+      return [] unless raw['parameters']
+      raw['parameters'].map do |definition|
+        OasParser::Parameter.new(self, definition)
+      end
+    end
   end
 end

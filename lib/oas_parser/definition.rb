@@ -1,5 +1,8 @@
 module OasParser
   class Definition
+    include OasParser::RawAccessor
+    raw_keys :info, :servers, :components, :openapi
+
     attr_accessor :raw
 
     def self.resolve(path)
@@ -19,16 +22,6 @@ module OasParser
 
     def endpoints
       paths.flat_map(&:endpoints)
-    end
-
-    def method_missing(m, *args, &block)
-      super unless %i[info servers components openapi].include? m
-      raw[m.to_s]
-    end
-
-    def respond_to_missing?(method_name, include_private = false)
-      super unless %i[info servers components openapi)].include? m
-      true
     end
   end
 end
