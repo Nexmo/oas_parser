@@ -19,6 +19,12 @@ module OasParser
       local_parameters + path.parameters
     end
 
+    def responses
+      raw['responses'].map do |code, definition|
+        OasParser::Response.new(self, code, definition)
+      end
+    end
+
     private
 
     def local_parameters

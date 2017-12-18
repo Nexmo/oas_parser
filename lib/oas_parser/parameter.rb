@@ -1,7 +1,7 @@
 module OasParser
   class Parameter
     include OasParser::RawAccessor
-    raw_keys :name, :in, :description, :style
+    raw_keys :name, :in, :description, :style, :type, :enum
 
     attr_accessor :owner, :raw
 

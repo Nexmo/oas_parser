@@ -14,7 +14,11 @@ RSpec.describe OasParser::Definition do
 
   describe '#required' do
     it 'returns a boolean' do
-      expect([true, false]).to include()
+      allow(@parameters).to receive(:raw) { { 'required' => true } }
+      expect(@parameters.required).to eq(true)
+
+      allow(@parameters).to receive(:raw) { { 'required' => false } }
+      expect(@parameters.required).to eq(false)
     end
 
     context 'when the owner provides a key of required with the name' do

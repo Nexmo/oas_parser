@@ -36,4 +36,11 @@ RSpec.describe OasParser::Definition do
       expect(@endpoint.parameters[0].class).to eq(OasParser::Parameter)
     end
   end
+
+  describe '#responses' do
+    it 'returns responses' do
+      expect(@endpoint.responses.count).to eq(2)
+      expect(@endpoint.responses[0].class).to eq(OasParser::Response)
+    end
+  end
 end
