@@ -1,5 +1,5 @@
 module OasParser
-  class Response
+  class Response < Payload
     include OasParser::RawAccessor
     raw_keys :description, :content
 
@@ -9,14 +9,6 @@ module OasParser
       @endpoint = endpoint
       @code = code
       @raw = raw
-    end
-
-    def formats
-      content.keys
-    end
-
-    def schema(format)
-      content[format]['schema']
     end
   end
 end
