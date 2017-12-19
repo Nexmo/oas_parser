@@ -37,10 +37,72 @@ RSpec.describe OasParser::Endpoint do
     end
   end
 
+  describe '#path_parameters' do
+    it 'returns the endpoint path_parameters' do
+      expect(@endpoint.path_parameters.count).to eq(0)
+    end
+  end
+
+  describe '#query_parameters' do
+    it 'returns the endpoint query_parameters' do
+      expect(@endpoint.query_parameters.count).to eq(2)
+      expect(@endpoint.query_parameters[0].class).to eq(OasParser::Parameter)
+    end
+  end
+
   describe '#responses' do
     it 'returns responses' do
       expect(@endpoint.responses.count).to eq(2)
       expect(@endpoint.responses[0].class).to eq(OasParser::Response)
+    end
+  end
+
+  describe '#callbacks' do
+    it 'returns callbacks' do
+      allow(@endpoint).to receive(:raw) { { 'callbacks' => [{}] } }
+      expect(@endpoint.callbacks.count).to eq(1)
+      expect(@endpoint.callbacks[0].class).to eq(OasParser::Callback)
+    end
+  end
+
+  describe '#security' do
+    it 'returns an empty hash when not defined' do
+      expect(@endpoint.security).to eq({})
+    end
+
+    it 'returns a hash defined' do
+      allow(@endpoint).to receive(:security) { { 'foo' => [] } }
+      expect(@endpoint.security.keys).to include('foo')
+    end
+  end
+
+  describe '#jwt?' do
+    it 'returns a boolean indicating if the endpoint uses JWT authentication' do
+      expect(@endpoint.jwt?).to eq(false)
+    end
+
+    context 'when the definition provides a security scheme with JWT' do
+      before do
+        allow(@definition).to receive(:components) { { 'securitySchemes' => { 'foo' => { 'bearerFormat' => 'JWT' } } } }
+      end
+
+      it 'returns false when the definition does not subscribe to the security scheme' do
+        expect(@endpoint.jwt?).to eq(false)
+      end
+
+      context 'definition subscribes to the securitys scheme' do
+        it 'returns true' do
+          allow(@definition).to receive(:security) { { 'foo' => [] } }
+          expect(@endpoint.jwt?).to eq(true)
+        end
+      end
+
+      context 'endpoint subscribes to the securitys scheme' do
+        it 'returns true' do
+          allow(@endpoint).to receive(:security) { { 'foo' => [] } }
+          expect(@endpoint.jwt?).to eq(true)
+        end
+      end
     end
   end
 
