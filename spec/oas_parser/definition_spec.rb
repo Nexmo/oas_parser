@@ -45,4 +45,15 @@ RSpec.describe OasParser::Definition do
       expect(@definition.components.class).to eq(Hash)
     end
   end
+
+  describe '#security' do
+    it 'returns an empty hash when not defined' do
+      expect(@definition.security).to eq({})
+    end
+
+    it 'returns a hash defined' do
+      allow(@definition).to receive(:security) { { 'foo' => [] } }
+      expect(@definition.security.keys).to include('foo')
+    end
+  end
 end
