@@ -17,4 +17,18 @@ RSpec.describe OasParser::RequestBody do
       expect(@request_body.formats).to eq(['application/json'])
     end
   end
+
+  describe '#schema' do
+    it 'returns the requested schema' do
+      expect(@request_body.schema('application/json').keys).to include('properties')
+    end
+  end
+
+  describe '#properties_for_format' do
+    it 'returns an array of properties' do
+      subject = @request_body.properties_for_format('application/json')
+      expect(subject.class).to eq(Array)
+      expect(subject[0].class).to eq(OasParser::Property)
+    end
+  end
 end

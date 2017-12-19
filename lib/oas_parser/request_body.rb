@@ -9,5 +9,11 @@ module OasParser
       @endpoint = endpoint
       @raw = raw
     end
+
+    def properties_for_format(format)
+      schema(format)['properties'].map do |name, definition|
+        OasParser::Property.new(self, schema(format), name, definition)
+      end
+    end
   end
 end
