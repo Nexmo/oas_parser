@@ -6,9 +6,13 @@ require 'addressable/uri'
 require 'json_schema'
 require 'deep_merge'
 
-require './lib/oas_parser/raw_accessor.rb'
+require_relative 'oas_parser/raw_accessor.rb'
 
-Dir['./lib/oas_parser/**/*.rb'].each { |file| require file }
+Dir["#{File.dirname(__FILE__)}/oas_parser/**/*.rb"].each do |file|
+  require file
+end
+
+File.expand_path('path', File.dirname(__FILE__))
 
 module OasParser
   # Your code goes here...
