@@ -11,4 +11,22 @@ RSpec.describe OasParser::Response do
       expect(@response.code).to eq('200')
     end
   end
+
+  describe '#description' do
+    it 'returns the description of the response' do
+      expect(@response.description).to eq('pet response')
+    end
+  end
+
+  describe '#formats' do
+    it 'returns the available response formats' do
+      expect(@response.formats).to eq(['application/json'])
+    end
+  end
+
+  # describe '#json' do
+  #   it 'returns the response in json' do
+  #     expect(@response.json).to eq(['application/json'])
+  #   end
+  # end
 end

@@ -4,6 +4,7 @@ require 'yaml'
 
 require 'addressable/uri'
 require 'json_schema'
+require 'deep_merge'
 
 require './lib/oas_parser/raw_accessor.rb'
 

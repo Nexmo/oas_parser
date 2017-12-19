@@ -1,7 +1,7 @@
 module OasParser
   class Response
-    # include OasParser::RawAccessor
-    # raw_keys :description, :summary, :operationId, :tags, :required
+    include OasParser::RawAccessor
+    raw_keys :description, :content
 
     attr_accessor :endpoint, :code, :raw
 
@@ -9,6 +9,14 @@ module OasParser
       @endpoint = endpoint
       @code = code
       @raw = raw
+    end
+
+    def formats
+      content.keys
+    end
+
+    def schema(format)
+      content[format]['schema']
     end
   end
 end
