@@ -1,4 +1,4 @@
-RSpec.describe OasParser::Definition do
+RSpec.describe OasParser::Endpoint do
   before do
     @definition = OasParser::Definition.resolve('spec/fixtures/petstore-expanded.yml')
     @path = @definition.paths[0]
