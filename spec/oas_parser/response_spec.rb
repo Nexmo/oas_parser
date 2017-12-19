@@ -24,9 +24,19 @@ RSpec.describe OasParser::Response do
     end
   end
 
-  # describe '#json' do
-  #   it 'returns the response in json' do
-  #     expect(@response.json).to eq(['application/json'])
-  #   end
-  # end
+  describe '#success?' do
+    it 'returns true only for 200 status codes' do
+      allow(@response).to receive(:code) { '200' }
+      expect(@response.success?).to eq(true)
+
+      allow(@response).to receive(:code) { '201' }
+      expect(@response.success?).to eq(true)
+
+      allow(@response).to receive(:code) { '2xx' }
+      expect(@response.success?).to eq(false)
+
+      allow(@response).to receive(:code) { '300' }
+      expect(@response.success?).to eq(false)
+    end
+  end
 end

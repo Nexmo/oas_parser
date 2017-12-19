@@ -10,5 +10,9 @@ module OasParser
       @code = code
       @raw = raw
     end
+
+    def success?
+      code.match?(/^2\d\d$/)
+    end
   end
 end
