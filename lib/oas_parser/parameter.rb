@@ -1,7 +1,8 @@
 module OasParser
   class Parameter
     include OasParser::RawAccessor
-    raw_keys :name, :in, :description, :style, :type, :enum
+    raw_keys :name, :in, :description, :style, :enum, :schema,
+             :minimum, :maximum, :example, :default, :required
 
     attr_accessor :owner, :raw
 
@@ -10,21 +11,20 @@ module OasParser
       @raw = raw
     end
 
-    def required
-      return true if local_required
-      return true if owner_required
-      false
+    def type
+      raw['type'] || schema['type']
     end
 
-    private
-
-    def local_required
-      raw['required']
+    def array?
+      type == 'array'
     end
 
-    def owner_required
-      return false unless owner.required
-      owner.required.include? name
+    def object?
+      type == 'object'
+    end
+
+    def collection?
+      array? || object?
     end
   end
 end
