@@ -43,4 +43,15 @@ RSpec.describe OasParser::Definition do
       expect(@endpoint.responses[0].class).to eq(OasParser::Response)
     end
   end
+
+  describe '#request_body' do
+    it 'returns false when there is no request_body' do
+      expect(@endpoint.request_body).to be_falsey
+    end
+
+    it 'returns a RequestBody when there is a request_body' do
+      allow(@endpoint).to receive(:raw) {{ 'requestBody' => {} }}
+      expect(@endpoint.request_body.class).to eq(OasParser::RequestBody)
+    end
+  end
 end
