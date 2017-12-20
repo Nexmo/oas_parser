@@ -27,7 +27,7 @@ module OasParser
     end
 
     def security
-      raw['security'] || {}
+      raw['security'] || []
     end
 
     def endpoints

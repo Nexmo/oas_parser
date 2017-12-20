@@ -66,13 +66,13 @@ RSpec.describe OasParser::Endpoint do
   end
 
   describe '#security' do
-    it 'returns an empty hash when not defined' do
-      expect(@endpoint.security).to eq({})
+    it 'returns an empty array when not defined' do
+      expect(@endpoint.security).to eq([])
     end
 
     it 'returns a hash defined' do
-      allow(@endpoint).to receive(:security) { { 'foo' => [] } }
-      expect(@endpoint.security.keys).to include('foo')
+      allow(@endpoint).to receive(:security) { [{ 'foo' => [] }] }
+      expect(@endpoint.security.flat_map(&:keys)).to include('foo')
     end
   end
 
@@ -92,14 +92,14 @@ RSpec.describe OasParser::Endpoint do
 
       context 'definition subscribes to the securitys scheme' do
         it 'returns true' do
-          allow(@definition).to receive(:security) { { 'foo' => [] } }
+          allow(@definition).to receive(:security) { [{ 'foo' => [] }] }
           expect(@endpoint.jwt?).to eq(true)
         end
       end
 
       context 'endpoint subscribes to the securitys scheme' do
         it 'returns true' do
-          allow(@endpoint).to receive(:security) { { 'foo' => [] } }
+          allow(@endpoint).to receive(:security) { [{ 'foo' => [] }] }
           expect(@endpoint.jwt?).to eq(true)
         end
       end

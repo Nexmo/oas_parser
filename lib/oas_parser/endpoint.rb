@@ -53,7 +53,7 @@ module OasParser
     end
 
     def security
-      raw['security'] || {}
+      raw['security'] || []
     end
 
     def callbacks
@@ -66,7 +66,7 @@ module OasParser
     def jwt?
       return false unless security
 
-      security_schemes = (security.keys + definition.security.keys).uniq
+      security_schemes = (security.flat_map(&:keys) + definition.security.flat_map(&:keys)).uniq
 
       security_schemes.each do |security_scheme_name|
         security_schema = definition.components['securitySchemes'][security_scheme_name]

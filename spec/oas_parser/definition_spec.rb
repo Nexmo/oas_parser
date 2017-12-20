@@ -47,13 +47,13 @@ RSpec.describe OasParser::Definition do
   end
 
   describe '#security' do
-    it 'returns an empty hash when not defined' do
-      expect(@definition.security).to eq({})
+    it 'returns an empty array when not defined' do
+      expect(@definition.security).to eq([])
     end
 
     it 'returns a hash defined' do
-      allow(@definition).to receive(:security) { { 'foo' => [] } }
-      expect(@definition.security.keys).to include('foo')
+      allow(@definition).to receive(:security) { [{ 'foo' => [] }] }
+      expect(@definition.security.flat_map(&:keys)).to include('foo')
     end
   end
 
