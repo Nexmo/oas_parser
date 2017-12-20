@@ -63,6 +63,12 @@ module OasParser
       end
     end
 
+    def callback_by_name(name)
+      definition = raw['callbacks'][name]
+      raise StandardError.new('So such callback exists') unless definition
+      OasParser::Callback.new(self, name, definition)
+    end
+
     def jwt?
       return false unless security
 

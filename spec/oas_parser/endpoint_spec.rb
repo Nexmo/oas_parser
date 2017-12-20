@@ -144,4 +144,24 @@ RSpec.describe OasParser::Endpoint do
       end
     end
   end
+
+  describe '#callback_by_name' do
+    before do
+      @definition = OasParser::Definition.resolve('spec/fixtures/callback-example.yml')
+      @path = @definition.path_by_path('/streams')
+      @endpoint = @path.endpoint_by_method('post')
+    end
+
+    it 'allows for a callback to be retrived by name' do
+      expect(@endpoint.callback_by_name('onData').class).to eq(OasParser::Callback)
+    end
+
+    context 'when given an invalid name' do
+      it 'raises an exception' do
+        expect {
+          @endpoint.callback_by_name('foo')
+        }.to raise_error(StandardError, 'So such callback exists')
+      end
+    end
+  end
 end
