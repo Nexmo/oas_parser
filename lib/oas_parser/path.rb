@@ -1,9 +1,9 @@
 module OasParser
   class Path
-    attr_accessor :definition, :path, :raw
+    attr_accessor :owner, :path, :raw
 
-    def initialize(definition, path, raw)
-      @definition = definition
+    def initialize(owner, path, raw)
+      @owner = owner
       @path = path
       @raw = raw
     end
@@ -32,6 +32,14 @@ module OasParser
       raw['parameters'].map do |definition|
         OasParser::Parameter.new(self, definition)
       end
+    end
+
+    def definition
+      owner if owner.class == OasParser::Definition
+    end
+
+    def callback
+      owner if owner.class == OasParser::Callback
     end
   end
 end
