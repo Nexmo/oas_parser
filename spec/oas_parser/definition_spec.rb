@@ -56,4 +56,18 @@ RSpec.describe OasParser::Definition do
       expect(@definition.security.keys).to include('foo')
     end
   end
+
+  describe '#path_by_path' do
+    it 'allows for a path to be retrived by its path' do
+      expect(@definition.path_by_path('/pets').class).to eq(OasParser::Path)
+    end
+
+    context 'when given an invalid path' do
+      it 'raises an exception' do
+        expect {
+          @definition.path_by_path('/foo')
+        }.to raise_error(StandardError, 'So such path exists')
+      end
+    end
+  end
 end

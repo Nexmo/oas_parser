@@ -27,6 +27,14 @@ module OasParser
       parameters.select { |parameter| parameter.in == 'query' }
     end
 
+    def parameter_by_name(name)
+      parameters.each do |parameter|
+        return parameter if parameter.name == name
+      end
+
+      raise StandardError.new('So such parameter exists')
+    end
+
     def request_body
       return false unless raw['requestBody']
       OasParser::RequestBody.new(self, raw['requestBody'])
@@ -36,6 +44,12 @@ module OasParser
       raw['responses'].map do |code, definition|
         OasParser::Response.new(self, code, definition)
       end
+    end
+
+    def response_by_code(code)
+      definition = raw['responses'][code]
+      raise StandardError.new('So such response exists') unless definition
+      OasParser::Response.new(self, code, definition)
     end
 
     def security

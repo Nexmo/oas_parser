@@ -1,7 +1,7 @@
 RSpec.describe OasParser::Path do
   before do
     @definition = OasParser::Definition.resolve('spec/fixtures/petstore-expanded.yml')
-    @path = @definition.paths[0]
+    @path = @definition.path_by_path('/pets')
   end
 
   describe '#definition' do
@@ -39,6 +39,20 @@ RSpec.describe OasParser::Path do
       allow(@path).to receive(:raw) {{ 'get' => {}, 'post' => {}, 'parameters' => [{}] }}
       expect(@path.parameters.count).to eq(1)
       expect(@path.parameters[0].class).to eq(OasParser::Parameter)
+    end
+  end
+
+  describe '#endpoint_by_method' do
+    it 'allows for an endpoint to be retrived by its method' do
+      expect(@path.endpoint_by_method('get').class).to eq(OasParser::Endpoint)
+    end
+
+    context 'when given an invalid method' do
+      it 'raises an exception' do
+        expect {
+          @path.endpoint_by_method('foo')
+        }.to raise_error(StandardError, 'So such endpoint exists')
+      end
     end
   end
 end

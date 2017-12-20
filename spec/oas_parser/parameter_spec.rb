@@ -1,9 +1,15 @@
 RSpec.describe OasParser::Parameter do
   before do
     @definition = OasParser::Definition.resolve('spec/fixtures/petstore-expanded.yml')
-    @path = @definition.paths[0]
-    @endpoint = @path.endpoints[0]
-    @parameter = @endpoint.parameters[0]
+    @path = @definition.path_by_path('/pets')
+    @endpoint = @path.endpoint_by_method('get')
+    @parameter = @endpoint.parameter_by_name('tags')
+  end
+
+  describe '#name' do
+    it 'returns the parameter name' do
+      expect(@parameter.name).to eq('tags')
+    end
   end
 
   describe '#owner' do

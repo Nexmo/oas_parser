@@ -17,6 +17,12 @@ module OasParser
       a.compact
     end
 
+    def endpoint_by_method(method)
+      definition = raw[method]
+      raise StandardError.new('So such endpoint exists') unless definition
+      OasParser::Endpoint.new(self, method, definition)
+    end
+
     def parameter_keys
       path.scan(/{(.+?)}/).flatten
     end

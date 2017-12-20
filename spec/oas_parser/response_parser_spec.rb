@@ -2,9 +2,9 @@ RSpec.describe OasParser::ResponseParser do
   before do
     @definition = OasParser::Definition.resolve('spec/fixtures/petstore-expanded.yml')
 
-    @index_path = @definition.paths[0]
-    @index_endpoint = @index_path.endpoints[0]
-    @index_response = @index_endpoint.responses[0]
+    @index_path = @definition.path_by_path('/pets')
+    @index_endpoint = @index_path.endpoint_by_method('get')
+    @index_response = @index_endpoint.response_by_code('200')
     @index_schema = @index_response.schema('application/json')
 
     @create_path = @definition.paths[1]

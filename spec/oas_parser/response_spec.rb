@@ -1,9 +1,9 @@
 RSpec.describe OasParser::Response do
   before do
     @definition = OasParser::Definition.resolve('spec/fixtures/petstore-expanded.yml')
-    @path = @definition.paths[0]
-    @endpoint = @path.endpoints[0]
-    @response = @endpoint.responses[0]
+    @path = @definition.path_by_path('/pets')
+    @endpoint = @path.endpoint_by_method('get')
+    @response = @endpoint.response_by_code('200')
   end
 
   describe '#code' do

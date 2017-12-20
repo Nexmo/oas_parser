@@ -1,8 +1,8 @@
 RSpec.describe OasParser::Endpoint do
   before do
     @definition = OasParser::Definition.resolve('spec/fixtures/petstore-expanded.yml')
-    @path = @definition.paths[0]
-    @endpoint = @path.endpoints[0]
+    @path = @definition.path_by_path('/pets')
+    @endpoint = @path.endpoint_by_method('get')
   end
 
   describe '#definition' do
@@ -114,6 +114,34 @@ RSpec.describe OasParser::Endpoint do
     it 'returns a RequestBody when there is a request_body' do
       allow(@endpoint).to receive(:raw) {{ 'requestBody' => {} }}
       expect(@endpoint.request_body.class).to eq(OasParser::RequestBody)
+    end
+  end
+
+  describe '#response_by_code' do
+    it 'allows for an response to be retrived by status code' do
+      expect(@endpoint.response_by_code('200').class).to eq(OasParser::Response)
+    end
+
+    context 'when given an invalid method' do
+      it 'raises an exception' do
+        expect {
+          @endpoint.response_by_code('foo')
+        }.to raise_error(StandardError, 'So such response exists')
+      end
+    end
+  end
+
+  describe '#parameter_by_name' do
+    it 'allows for a parameter to be retrived by name' do
+      expect(@endpoint.parameter_by_name('tags').class).to eq(OasParser::Parameter)
+    end
+
+    context 'when given an invalid name' do
+      it 'raises an exception' do
+        expect {
+          @endpoint.parameter_by_name('foo')
+        }.to raise_error(StandardError, 'So such parameter exists')
+      end
     end
   end
 end

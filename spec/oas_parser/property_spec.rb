@@ -1,8 +1,8 @@
 RSpec.describe OasParser::Property do
   before do
     @definition = OasParser::Definition.resolve('spec/fixtures/petstore-expanded.yml')
-    @path = @definition.paths[0]
-    @endpoint = @path.endpoints[1]
+    @path = @definition.path_by_path('/pets')
+    @endpoint = @path.endpoint_by_method('post')
     @request_body = @endpoint.request_body
     @property = @request_body.properties_for_format('application/json')[0]
   end
