@@ -84,4 +84,26 @@ RSpec.describe OasParser::Property do
       end
     end
   end
+
+  describe '#properties' do
+    before do
+      @definition = OasParser::Definition.resolve('spec/fixtures/petstore-nested.yml')
+      @path = @definition.path_by_path('/pets')
+      @endpoint = @path.endpoint_by_method('post')
+      @request_body = @endpoint.request_body
+      @properties = @request_body.properties_for_format('application/json')
+      @location_property = @properties[2]
+      @attributes_property = @properties[3]
+    end
+
+    it 'can be used to return collection properties' do
+      expect(@location_property.properties[0].class).to eq(OasParser::Property)
+      expect(@location_property.properties[0].name).to eq('latitude')
+      expect(@location_property.properties[0].type).to eq('string')
+
+      expect(@attributes_property.properties[0].class).to eq(OasParser::Property)
+      expect(@attributes_property.properties[0].name).to eq('id')
+      expect(@attributes_property.properties[0].type).to eq('string')
+    end
+  end
 end

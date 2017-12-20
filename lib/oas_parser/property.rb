@@ -29,5 +29,17 @@ module OasParser
     def collection?
       array? || object?
     end
+
+    def properties
+      return convert_property_schema_to_properties(raw) if object?
+      return convert_property_schema_to_properties(raw['items']) if array?
+      nil
+    end
+
+    def convert_property_schema_to_properties(schema)
+      schema['properties'].map do |name, definition|
+        OasParser::Property.new(self, raw, name, definition)
+      end
+    end
   end
 end
