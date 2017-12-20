@@ -2,7 +2,7 @@ module OasParser
   class Property
     include OasParser::RawAccessor
     raw_keys :name, :description, :type, :enum, :minimum, :maximum,
-             :example, :default 
+             :example, :default, :items
 
     attr_accessor :owner, :name, :schema, :raw
 
