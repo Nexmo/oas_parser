@@ -1,6 +1,7 @@
 module OasParser
   class Payload
     def formats
+      return [] unless content
       content.keys
     end
 
