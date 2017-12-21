@@ -39,4 +39,37 @@ RSpec.describe OasParser::Response do
       expect(@response.success?).to eq(false)
     end
   end
+
+  describe '#exhibits_one_of_multiple_schemas?' do
+    it 'returns false for the petstore definition' do
+      expect(@response.exhibits_one_of_multiple_schemas?).to eq(false)
+    end
+  end
+
+  describe '#schema' do
+    it 'returns the schema for the given format' do
+      expect(@response.schema('application/json')['type']).to eq('array')
+    end
+  end
+
+  context 'given a definition that provides oneOf as a response' do
+    before do
+      @definition = OasParser::Definition.resolve('spec/fixtures/petstore-oneof.yml')
+      @path = @definition.path_by_path('/random')
+      @endpoint = @path.endpoint_by_method('get')
+      @response = @endpoint.response_by_code('200')
+    end
+
+    describe '#exhibits_one_of_multiple_schemas?' do
+      it 'returns true' do
+        expect(@response.exhibits_one_of_multiple_schemas?).to eq(true)
+      end
+    end
+
+    describe '#split_schemas' do
+      it 'returns all schemas' do
+        expect(@response.split_schemas('application/json').count).to eq(2)
+      end
+    end
+  end
 end
