@@ -31,13 +31,14 @@ module OasParser
     end
 
     def properties
-      return convert_property_schema_to_properties(raw) if object?
-      return convert_property_schema_to_properties(raw['items']) if array?
+      return convert_property_schema_to_properties(raw['properties']) if object?
+      return convert_property_schema_to_properties(items) if array?
       nil
     end
 
     def convert_property_schema_to_properties(schema)
-      schema['properties'].map do |name, definition|
+      schema = schema['properties'] if schema['properties']
+      schema.map do |name, definition|
         OasParser::Property.new(self, raw, name, definition)
       end
     end
