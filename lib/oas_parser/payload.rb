@@ -13,9 +13,9 @@ module OasParser
       content[format]['schema']['oneOf']
     end
 
-    def exhibits_one_of_multiple_schemas?
+    def exhibits_one_of_multiple_schemas?(format)
       return false unless content
-      content['application/json']['schema'].keys.include?('oneOf')
+      schema(format).keys.include?('oneOf')
     end
   end
 end

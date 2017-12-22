@@ -42,7 +42,7 @@ RSpec.describe OasParser::Response do
 
   describe '#exhibits_one_of_multiple_schemas?' do
     it 'returns false for the petstore definition' do
-      expect(@response.exhibits_one_of_multiple_schemas?).to eq(false)
+      expect(@response.exhibits_one_of_multiple_schemas?('application/json')).to eq(false)
     end
   end
 
@@ -62,7 +62,7 @@ RSpec.describe OasParser::Response do
 
     describe '#exhibits_one_of_multiple_schemas?' do
       it 'returns true' do
-        expect(@response.exhibits_one_of_multiple_schemas?).to eq(true)
+        expect(@response.exhibits_one_of_multiple_schemas?('application/json')).to eq(true)
       end
     end
 
