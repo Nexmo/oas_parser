@@ -72,14 +72,19 @@ module OasParser
     def jwt?
       return false unless security
 
-      security_schemes = (security.flat_map(&:keys) + definition.security.flat_map(&:keys)).uniq
-
-      security_schemes.each do |security_scheme_name|
-        security_schema = definition.components['securitySchemes'][security_scheme_name]
+      security_schemes.each do |security_schema|
         return true if security_schema['bearerFormat'] == 'JWT'
       end
 
       false
+    end
+
+    def security_schemes
+      security_schemes = (security.flat_map(&:keys) + definition.security.flat_map(&:keys)).uniq
+
+      security_schemes.map do |security_scheme_name|
+        definition.components['securitySchemes'][security_scheme_name]
+      end
     end
 
     private

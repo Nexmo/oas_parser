@@ -106,6 +106,36 @@ RSpec.describe OasParser::Endpoint do
     end
   end
 
+  describe '#security_schemes' do
+    it 'returns a boolean indicating if the endpoint uses JWT authentication' do
+      expect(@endpoint.security_schemes).to eq([])
+    end
+
+    context 'when the definition provides a security scheme with JWT' do
+      before do
+        allow(@definition).to receive(:components) { { 'securitySchemes' => { 'foo' => { 'bearerFormat' => 'JWT' } } } }
+      end
+
+      it 'returns false when the definition does not subscribe to the security scheme' do
+        expect(@endpoint.security_schemes).to eq([])
+      end
+
+      context 'definition subscribes to the securitys scheme' do
+        it 'returns true' do
+          allow(@definition).to receive(:security) { [{ 'foo' => [] }] }
+          expect(@endpoint.security_schemes.count).to eq(1)
+        end
+      end
+
+      context 'endpoint subscribes to the securitys scheme' do
+        it 'returns true' do
+          allow(@endpoint).to receive(:security) { [{ 'foo' => [] }] }
+          expect(@endpoint.security_schemes.count).to eq(1)
+        end
+      end
+    end
+  end
+
   describe '#request_body' do
     it 'returns false when there is no request_body' do
       expect(@endpoint.request_body).to be_falsey
