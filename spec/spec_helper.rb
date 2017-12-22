@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start
+
 require "bundler/setup"
 require "oas_parser"
 require "pry"
