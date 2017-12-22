@@ -14,7 +14,8 @@ module OasParser
 
     def route(root_object)
       case root_object['type']
-      when 'object' then parse_object(root_object)
+      when 'object'
+        parse_object(root_object)
       when 'array' then parse_array(root_object)
       when nil
         return nil if root_object['additionalProperties'] == false
@@ -25,7 +26,7 @@ module OasParser
           return parse_object(root_object.merge({ 'type' => 'object' }))
         end
 
-        raise StandardError.new("Unhandled object with missing type")
+        raise StandardError.new("Unhandled object #{root_object} with missing type")
       else
         raise StandardError.new("Don't know how to parse #{root_object['type']}")
       end
@@ -33,12 +34,12 @@ module OasParser
 
     def parse_object(object)
       raise StandardError.new("Not a hash") unless object.class == Hash
-      raise StandardError.new("Not an object") unless object['type'] == 'object'
+      raise StandardError.new("Not an object") unless treat_as_object?(object)
 
       if object['allOf']
         merged_object = { 'type' => 'object' }
         object['allOf'].each { |o| merged_object.deep_merge!(o) }
-        return parse_object(merged_object)
+        return parameter_value(merged_object)
       elsif object['properties']
         o = {}
         object['properties'].each do |key, value|
@@ -78,7 +79,15 @@ module OasParser
       when 'object' then return parse_object(parameter)
       when 'array' then return parse_array(parameter)
       else
-        raise StandardError.new("Can not resolve parameter type of #{parameter['type']}")
+        if treat_as_object?(parameter)
+          return parse_object(parameter)
+        end
+
+        if parameter['type']
+          raise StandardError.new("Can not resolve parameter type of #{parameter['type']}")
+        else
+          raise StandardError.new("Parameter #{parameter} is missing type.")
+        end
       end
     end
 
@@ -86,6 +95,7 @@ module OasParser
     def treat_as_object?(object)
       return true if object['type'] == 'object'
       return true if object['allOf']
+      return true if object['oneOf']
       return true if object['properties']
       false
     end
