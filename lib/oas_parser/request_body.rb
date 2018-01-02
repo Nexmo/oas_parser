@@ -15,5 +15,13 @@ module OasParser
         OasParser::Property.new(self, schema(format), name, definition)
       end
     end
+
+    def split_properties_for_format(format)
+      split_schemas(format).map do |schema|
+        schema['properties'].map do |name, definition|
+          OasParser::Property.new(self, schema(format), name, definition)
+        end
+      end
+    end
   end
 end
