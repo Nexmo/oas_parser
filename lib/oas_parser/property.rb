@@ -1,7 +1,7 @@
 module OasParser
   class Property
     include OasParser::RawAccessor
-    raw_keys :name, :description, :type, :enum, :minimum, :maximum,
+    raw_keys :name, :description, :type, :format, :enum, :minimum, :maximum,
              :example, :default, :items
 
     attr_accessor :owner, :name, :schema, :raw
@@ -14,6 +14,7 @@ module OasParser
     end
 
     def required
+      return true if raw['required']
       return false unless schema['required']
       schema['required'].include? name
     end

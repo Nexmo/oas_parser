@@ -2,7 +2,7 @@ module OasParser
   class Parameter
     include OasParser::RawAccessor
     raw_keys :name, :in, :description, :style, :enum, :schema,
-             :minimum, :maximum, :example, :default, :required
+             :minimum, :maximum, :required
 
     attr_accessor :owner, :raw
 
@@ -13,6 +13,10 @@ module OasParser
 
     def type
       raw['type'] || schema['type']
+    end
+
+    def format
+      raw['format'] || schema['format']
     end
 
     def array?
@@ -29,6 +33,14 @@ module OasParser
 
     def items
       schema['items']
+    end
+
+    def example
+      raw['example'] || schema['example']
+    end
+
+    def default
+      raw['default'] || schema['default']
     end
 
     def properties
