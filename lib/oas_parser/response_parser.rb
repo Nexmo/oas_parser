@@ -6,11 +6,43 @@ module OasParser
       @raw = raw
     end
 
-    def parse
+    def parse(mode = nil)
+      @mode = mode
       route(@raw)
     end
 
+    def json
+      parse('json').to_json
+    end
+
+    def xml(xml_options = {})
+      xml_options ||= {}
+      xml_options = default_xml_options.merge(xml_options)
+
+      raw_xml = parse('xml').to_xml(xml_options)
+
+      xml_document = Nokogiri::XML(raw_xml)
+
+      xml_document.xpath('//__attributes').each do |attributes|
+        attributes.children.each do |attribute|
+          next unless attribute.class == Nokogiri::XML::Element
+          attribute.parent.parent.css("> #{attribute.name}").remove
+          attribute.parent.parent[attribute.name] = attribute.content
+        end
+      end
+
+      xml_document.xpath('//__attributes').each(&:remove)
+
+      xml_document.to_xml.each_line.reject { |x| x.strip == '' }.join
+    end
+
     private
+
+    def default_xml_options
+      {
+        dasherize: false
+      }
+    end
 
     def route(root_object)
       case root_object['type']
@@ -43,6 +75,11 @@ module OasParser
       elsif object['properties']
         o = {}
         object['properties'].each do |key, value|
+          if @mode == 'xml' && is_xml_attribute?(value)
+            o['__attributes'] ||= {}
+            o['__attributes'][key] = parameter_value(value)
+          end
+
           o[key] = parameter_value(value)
         end
 
@@ -98,6 +135,15 @@ module OasParser
       return true if object['oneOf']
       return true if object['properties']
       false
+    end
+
+    def has_xml_options?(object)
+      object['xml'].present?
+    end
+
+    def is_xml_attribute?(object)
+      return false unless has_xml_options?(object)
+      object['xml']['attribute'] || false
     end
   end
 end

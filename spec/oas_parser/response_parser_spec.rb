@@ -11,6 +11,23 @@ RSpec.describe OasParser::ResponseParser do
     @create_endpoint = @create_path.endpoints[0]
     @create_response = @create_endpoint.responses[0]
     @create_schema = @create_response.schema('application/json')
+
+    @schema = {
+      'type' => 'object',
+      'properties' => {
+        'number' => {
+          'type' => 'number'
+        },
+        'street_name' => {
+          'type' => 'string',
+          'example' => '1 Infinite Loop'
+        },
+        'street_type' => {
+          'type' => 'string',
+          'enum' => ['Street', 'Avenue', 'Boulevard']
+        }
+      }
+    }
   end
 
   describe '#parse' do
@@ -31,6 +48,109 @@ RSpec.describe OasParser::ResponseParser do
         expect(response.keys).to include('name')
         expect(response.keys).to include('tag')
         expect(response.keys).to include('id')
+      end
+
+      it 'returns handles examples' do
+        response = OasParser::ResponseParser.new(@schema).parse
+
+        expect(response).to eq({
+          'number' => 1.0,
+          'street_name' => '1 Infinite Loop',
+          'street_type' => 'abc123'
+        })
+      end
+    end
+  end
+
+  describe 'json' do
+    it 'returns JSON' do
+      response = OasParser::ResponseParser.new(@schema).json
+
+      expected_response = <<~HEREDOC
+        {
+          "number": 1.0,
+          "street_name": "1 Infinite Loop",
+          "street_type": "abc123"
+        }
+      HEREDOC
+
+      expect(response).to eq(JSON.parse(expected_response).to_json)
+    end
+  end
+
+  describe 'xml' do
+    it 'returns XML' do
+      response = OasParser::ResponseParser.new(@schema).xml
+
+      expected_response = <<~HEREDOC
+        <?xml version="1.0" encoding="UTF-8"?>
+        <hash>
+          <number type="float">1.0</number>
+          <street_name>1 Infinite Loop</street_name>
+          <street_type>abc123</street_type>
+        </hash>
+      HEREDOC
+
+      expect(response).to eq(expected_response)
+    end
+  end
+
+  context 'when the schema has XML attributes' do
+    before do
+      @schema = {
+        'type' => 'object',
+        'properties' => {
+          'code' => {
+            'type' => 'integer',
+            'xml' => {
+              'attribute' => true
+            }
+          },
+          'foo' => {
+            'type' => 'object',
+            'properties' => {
+              'foo' => {
+                'type' => 'integer',
+                'xml' => {
+                  'attribute' => true
+                }
+              },
+            }
+          }
+        }
+      }
+    end
+
+    describe 'xml' do
+      it 'includes them as XML attributes' do
+        response = OasParser::ResponseParser.new(@schema).xml
+
+        expected_response = <<~HEREDOC
+          <?xml version="1.0" encoding="UTF-8"?>
+          <hash code="1">
+            <foo foo="1">
+            </foo>
+          </hash>
+        HEREDOC
+
+        expect(response).to eq(expected_response)
+      end
+    end
+
+    describe 'json' do
+      it 'ignores the attributes' do
+        response = OasParser::ResponseParser.new(@schema).json
+
+        expected_response = <<~HEREDOC
+          {
+            "code": 1,
+            "foo": {
+              "foo": 1
+            }
+          }
+        HEREDOC
+
+        expect(response).to eq(JSON.parse(expected_response).to_json)
       end
     end
   end
