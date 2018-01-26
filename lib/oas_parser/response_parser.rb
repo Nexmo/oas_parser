@@ -31,6 +31,11 @@ module OasParser
         end
       end
 
+      xml_document.xpath('//__text').each do |attribute|
+        value = attribute.children.last.content
+        attribute.parent.content = value
+      end
+
       xml_document.xpath('//__attributes').each(&:remove)
 
       xml_document.to_xml.each_line.reject { |x| x.strip == '' }.join
@@ -75,9 +80,15 @@ module OasParser
       elsif object['properties']
         o = {}
         object['properties'].each do |key, value|
-          if @mode == 'xml' && is_xml_attribute?(value)
-            o['__attributes'] ||= {}
-            o['__attributes'][key] = parameter_value(value)
+          if @mode == 'xml'
+            if is_xml_attribute?(value)
+              o['__attributes'] ||= {}
+              o['__attributes'][key] = parameter_value(value)
+            end
+
+            if is_xml_text?(value)
+              o['__text'] = parameter_value(value)
+            end
           end
 
           o[key] = parameter_value(value)
@@ -144,6 +155,13 @@ module OasParser
     def is_xml_attribute?(object)
       return false unless has_xml_options?(object)
       object['xml']['attribute'] || false
+    end
+
+    def is_xml_text?(object)
+      # See: https://github.com/OAI/OpenAPI-Specification/issues/630#issuecomment-350680346
+      return false unless has_xml_options?(object)
+      return true if object['xml']['text'] || false
+      object['xml']['x-text'] || false
     end
   end
 end
