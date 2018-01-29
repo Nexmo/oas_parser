@@ -85,7 +85,7 @@ RSpec.describe OasParser::ResponseParser do
       expected_response = <<~HEREDOC
         <?xml version="1.0" encoding="UTF-8"?>
         <hash>
-          <number type="float">1.0</number>
+          <number>1.0</number>
           <street_name>1 Infinite Loop</street_name>
           <street_type>abc123</street_type>
         </hash>

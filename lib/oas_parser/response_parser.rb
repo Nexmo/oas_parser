@@ -45,7 +45,8 @@ module OasParser
 
     def default_xml_options
       {
-        dasherize: false
+        dasherize: false,
+        skip_types: true,
       }
     end
 
