@@ -206,4 +206,50 @@ RSpec.describe OasParser::ResponseParser do
       end
     end
   end
+
+
+  context 'when the schema has XML name' do
+    before do
+      @schema = {
+        'type' => 'object',
+        'properties' => {
+          'foo_bar' => {
+            'type' => 'string',
+            'xml' => {
+              'name' => 'fooBar'
+            }
+          }
+        }
+      }
+    end
+
+    describe 'xml' do
+      it 'uses the name value as the node' do
+        response = OasParser::ResponseParser.new(@schema).xml
+
+        expected_response = <<~HEREDOC
+          <?xml version="1.0" encoding="UTF-8"?>
+          <hash>
+            <fooBar>abc123</fooBar>
+          </hash>
+        HEREDOC
+
+        expect(response).to eq(expected_response)
+      end
+    end
+
+    describe 'json' do
+      it 'ignores the xml name flag' do
+        response = OasParser::ResponseParser.new(@schema).json
+
+        expected_response = <<~HEREDOC
+          {
+            "foo_bar": "abc123"
+          }
+        HEREDOC
+
+        expect(response).to eq(JSON.parse(expected_response).to_json)
+      end
+    end
+  end
 end

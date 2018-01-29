@@ -89,6 +89,10 @@ module OasParser
             if is_xml_text?(value)
               o['__text'] = parameter_value(value)
             end
+
+            if has_xml_name?(value)
+              key = xml_name(value)
+            end
           end
 
           o[key] = parameter_value(value)
@@ -162,6 +166,15 @@ module OasParser
       return false unless has_xml_options?(object)
       return true if object['xml']['text'] || false
       object['xml']['x-text'] || false
+    end
+
+    def has_xml_name?(object)
+      return false unless has_xml_options?(object)
+      xml_name(object) || false
+    end
+
+    def xml_name(object)
+      object['xml']['name']
     end
   end
 end
