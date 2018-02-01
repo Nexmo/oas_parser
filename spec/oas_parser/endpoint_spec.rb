@@ -35,6 +35,20 @@ RSpec.describe OasParser::Endpoint do
       expect(@endpoint.parameters.count).to eq(3)
       expect(@endpoint.parameters[0].class).to eq(OasParser::Parameter)
     end
+
+    context 'when a security schema is present' do
+      before do
+        @definition = OasParser::Definition.resolve('spec/fixtures/petstore-security-schema.yml')
+        @path = @definition.path_by_path('/pets')
+        @endpoint = @path.endpoint_by_method('get')
+      end
+
+      it 'includes the properties of the security schema' do
+        parameters = @endpoint.parameters
+        expect(parameters.map(&:name)).to include('api_key')
+        expect(parameters.map(&:name)).to include('api_secret')
+      end
+    end
   end
 
   describe '#path_parameters' do

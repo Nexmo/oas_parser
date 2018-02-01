@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    oas_parser (0.6.0)
+    oas_parser (0.7.0)
       activesupport (~> 5.1.2)
       addressable (~> 2.3)
       builder (~> 3.2.3)
@@ -55,7 +55,7 @@ GEM
     mini_portile2 (2.3.0)
     minitest (5.11.3)
     nenv (0.3.0)
-    nokogiri (1.8.1)
+    nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     notiffany (0.1.1)
       nenv (~> 0.1)

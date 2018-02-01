@@ -12,11 +12,11 @@ module OasParser
     end
 
     def type
-      raw['type'] || schema['type']
+      raw['type'] || (schema ? schema['type'] : nil)
     end
 
     def format
-      raw['format'] || schema['format']
+      raw['format'] || (schema ? schema['format'] : nil)
     end
 
     def array?
@@ -36,11 +36,11 @@ module OasParser
     end
 
     def example
-      raw['example'] || schema['example']
+      raw['example'] || (schema ? schema['example'] : nil)
     end
 
     def default
-      raw['default'] || schema['default']
+      raw['default'] || (schema ? schema['default'] : nil)
     end
 
     def properties

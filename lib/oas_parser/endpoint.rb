@@ -16,7 +16,7 @@ module OasParser
     end
 
     def parameters
-      local_parameters + path.parameters
+      security_schema_parameters + local_parameters + path.parameters
     end
 
     def path_parameters
@@ -25,6 +25,23 @@ module OasParser
 
     def query_parameters
       parameters.select { |parameter| parameter.in == 'query' }
+    end
+
+    def security_schema_parameters
+      raw_security_schema_parameters = security_schemes.select do |security_schema|
+        security_schema['in'].present? && security_schema['in'].present?
+      end
+
+      security_schema_parameter_defaults = {
+        'type' => 'string',
+        'example' => 'abc123',
+        'default' => false,
+      }
+
+      raw_security_schema_parameters.map do |definition|
+        definition = security_schema_parameter_defaults.merge(definition)
+        OasParser::Parameter.new(self, definition)
+      end
     end
 
     def parameter_by_name(name)
@@ -80,7 +97,13 @@ module OasParser
     end
 
     def security_schemes
-      security_schemes = (security.flat_map(&:keys) + definition.security.flat_map(&:keys)).uniq
+      security_schemes = security.flat_map(&:keys)
+
+      if definition
+        security_schemes = security_schemes + definition.security.flat_map(&:keys)
+      end
+
+      security_schemes = security_schemes.uniq
 
       security_schemes.map do |security_scheme_name|
         definition.components['securitySchemes'][security_scheme_name]
