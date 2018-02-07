@@ -2,6 +2,16 @@ module OasParser
   class AbstractAttribute
     include OasParser::RawAccessor
 
+    def name(format = nil)
+      default = @name || raw['name']
+      return default unless format
+      case format
+      when 'text/xml'
+        has_xml_name? ? xml_name : default
+      else default
+      end
+    end
+
     def enum
       raw['enum'] || (schema ? schema['enum'] : nil)
     end

@@ -1,6 +1,6 @@
 module OasParser
   class Parameter < AbstractAttribute
-    raw_keys :name, :in, :description, :style, :schema,
+    raw_keys :in, :description, :style, :schema,
              :minimum, :maximum, :required
 
     attr_accessor :owner, :raw

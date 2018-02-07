@@ -1,9 +1,10 @@
 module OasParser
   class Property < AbstractAttribute
-    raw_keys :name, :description, :type, :format, :minimum, :maximum,
+    raw_keys :description, :type, :format, :minimum, :maximum,
              :example, :default, :items
 
-    attr_accessor :owner, :name, :schema, :raw
+    attr_accessor :owner, :schema, :raw
+    attr_writer :name
 
     def initialize(owner, schema, name, raw)
       @owner = owner
