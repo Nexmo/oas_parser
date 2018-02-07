@@ -1,6 +1,5 @@
 module OasParser
-  class Parameter
-    include OasParser::RawAccessor
+  class Parameter < AbstractAttribute
     raw_keys :name, :in, :description, :style, :enum, :schema,
              :minimum, :maximum, :required
 
@@ -19,18 +18,6 @@ module OasParser
       raw['format'] || (schema ? schema['format'] : nil)
     end
 
-    def array?
-      type == 'array'
-    end
-
-    def object?
-      type == 'object'
-    end
-
-    def collection?
-      array? || object?
-    end
-
     def items
       schema['items']
     end
@@ -41,12 +28,6 @@ module OasParser
 
     def default
       raw['default'] || (schema ? schema['default'] : nil)
-    end
-
-    def properties
-      return convert_property_schema_to_properties(raw['properties']) if object?
-      return convert_property_schema_to_properties(items) if array?
-      nil
     end
 
     def convert_property_schema_to_properties(schema)

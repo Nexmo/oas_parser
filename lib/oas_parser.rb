@@ -11,6 +11,7 @@ require 'deep_merge'
 
 require_relative 'oas_parser/payload.rb'
 require_relative 'oas_parser/raw_accessor.rb'
+require_relative 'oas_parser/abstract_attribute.rb'
 
 Dir["#{File.dirname(__FILE__)}/oas_parser/**/*.rb"].each do |file|
   require file

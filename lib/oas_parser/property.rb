@@ -1,6 +1,5 @@
 module OasParser
-  class Property
-    include OasParser::RawAccessor
+  class Property < AbstractAttribute
     raw_keys :name, :description, :type, :format, :enum, :minimum, :maximum,
              :example, :default, :items
 
@@ -17,24 +16,6 @@ module OasParser
       return true if raw['required']
       return false unless schema['required']
       schema['required'].include? name
-    end
-
-    def array?
-      type == 'array'
-    end
-
-    def object?
-      type == 'object'
-    end
-
-    def collection?
-      array? || object?
-    end
-
-    def properties
-      return convert_property_schema_to_properties(raw['properties']) if object?
-      return convert_property_schema_to_properties(items) if array?
-      nil
     end
 
     def convert_property_schema_to_properties(schema)
