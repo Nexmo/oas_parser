@@ -1,6 +1,6 @@
 module OasParser
   class Property < AbstractAttribute
-    raw_keys :name, :description, :type, :format, :enum, :minimum, :maximum,
+    raw_keys :name, :description, :type, :format, :minimum, :maximum,
              :example, :default, :items
 
     attr_accessor :owner, :name, :schema, :raw

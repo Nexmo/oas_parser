@@ -2,6 +2,10 @@ module OasParser
   class AbstractAttribute
     include OasParser::RawAccessor
 
+    def enum
+      raw['enum'] || (schema ? schema['enum'] : nil)
+    end
+
     def array?
       type == 'array'
     end
