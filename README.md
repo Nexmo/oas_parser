@@ -1,43 +1,62 @@
-# OasParser
+# Open API Definition Parser
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/oas_parser`. To experiment with that code, run `bin/console` for an interactive prompt.
+A Ruby parser for Open API Spec 3.0+ definitions.
 
-TODO: Delete this and the text above, and describe your gem
+### Install
 
-## Installation
+Install the gem:
 
-Add this line to your application's Gemfile:
+```
+$ gem install oas_parser
+```
+
+Or add it to your Gemfile:
 
 ```ruby
 gem 'oas_parser'
 ```
 
-And then execute:
+### Usage
 
-    $ bundle
+Here is a basic example of how you can traverse through an Open API Spec 3 Definition:
 
-Or install it yourself as:
+```ruby
+require 'oas_parser'
 
-    $ gem install oas_parser
+definition = OasParser::Definition.resolve('petstore.yml')
+# => #<OasParser::Definition>
 
-## Usage
+# Get a specific path
+path = definition.path_by_path('/pets')
+# => #<OasParser::Path>
 
-TODO: Write usage instructions here
+# Get all paths.
+definition.paths
+# => [#<OasParser::Path>, ...]
 
-## Development
+# Get a specific endpoint by method
+endpoint = path.endpoint_by_method('get')
+# => #<OasParser::Endpoint>
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+# Get all endpoints
+path.endpoints
+# => [#<OasParser::Endpoint>, ...]
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# Get endpoint description
+endpoint.description
+# => "Returns all pets from the system that the user has access to"
+```
+
+Checkout the tests and `lib` directory for more classes and methods.
+
+### Development
+
+Run tests:
+
+```
+$ rspec
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/oas_parser. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the OasParser project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/oas_parser/blob/master/CODE_OF_CONDUCT.md).
+Contributions are welcome, please follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html)
