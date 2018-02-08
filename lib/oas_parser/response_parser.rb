@@ -31,6 +31,19 @@ module OasParser
         end
       end
 
+      xml_document.xpath('//__array_attributes').each do |attributes|
+        attributes.children.each do |attribute|
+          next unless attribute.class == Nokogiri::XML::Element
+
+          parameter = {}
+          parameter['example'] = attribute.css('example').text if attribute.css('example')
+          parameter['type'] = attribute.css('type').text if attribute.css('type')
+
+          attribute.parent.parent.parent[attribute.name] = parameter_value(parameter)
+        end
+        attributes.parent.remove
+      end
+
       xml_document.xpath('//__text').each do |attribute|
         value = attribute.children.last.content
         attribute.parent.content = value
@@ -108,14 +121,30 @@ module OasParser
     def parse_array(object)
       raise StandardError.new("Not an array") unless object['type'] == 'array'
 
+      attributes = {}
+
+      if object['properties']
+        if @mode == 'xml'
+          object['properties'].each do |key, value|
+            if is_xml_attribute?(value)
+              attributes[key] = value
+            end
+          end
+        end
+      end
+
       case object['items']['type']
       when 'object'
-        [parse_object(object['items'])]
+        if attributes.any?
+          [parse_object(object['items']), { '__array_attributes' => attributes }]
+        else
+          [parse_object(object['items'])]
+        end
       else
         if object['items']
           # Handle objects with missing type
           object['items']['type'] = 'object'
-          [parse_object(object['items'])]
+          [parse_object(object['items']), { '__array_attributes' => attributes }]
         else
           raise StandardError.new("parse_array: Don't know how to parse object")
         end

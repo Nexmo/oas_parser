@@ -155,6 +155,75 @@ RSpec.describe OasParser::ResponseParser do
     end
   end
 
+  context 'when the schema has XML attributes on an array type' do
+    before do
+      @schema = {
+        "type" => "object",
+        "properties" => {
+          "items" => {
+            "type" => "array",
+            "xml" => {
+              "name" => "items"
+            },
+            "items" => {
+              "properties" => {
+                "foo" => {
+                  "type" => "string"
+                }
+              }
+            },
+            "properties" => {
+              "quantity" => {
+                "type" => "integer",
+                "example" => 1,
+                "xml" => {
+                  'attribute' => true
+                }
+              }
+            }
+          }
+        }
+      }
+    end
+
+    describe 'xml' do
+      it 'includes them as XML attributes' do
+        response = OasParser::ResponseParser.new(@schema).xml
+
+        expected_response = <<~HEREDOC
+          <?xml version="1.0" encoding="UTF-8"?>
+          <hash>
+            <items quantity="1">
+              <item>
+                <foo>abc123</foo>
+              </item>
+            </items>
+          </hash>
+        HEREDOC
+
+        expect(response).to eq(expected_response)
+      end
+    end
+
+    describe 'json' do
+      it 'ignores the attributes' do
+        response = OasParser::ResponseParser.new(@schema).json
+
+        expected_response = <<~HEREDOC
+          {
+            "items": [
+              {
+                "foo": "abc123"
+              }
+            ]
+          }
+        HEREDOC
+
+        expect(response).to eq(JSON.parse(expected_response).to_json)
+      end
+    end
+  end
+
   context 'when the schema has XML text' do
     before do
       @schema = {
