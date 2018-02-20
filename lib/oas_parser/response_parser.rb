@@ -135,7 +135,7 @@ module OasParser
 
       case object['items']['type']
       when 'object'
-        if attributes.any?
+        if attributes.any? && @mode == 'xml'
           [parse_object(object['items']), { '__array_attributes' => attributes }]
         else
           [parse_object(object['items'])]
@@ -144,7 +144,11 @@ module OasParser
         if object['items']
           # Handle objects with missing type
           object['items']['type'] = 'object'
-          [parse_object(object['items']), { '__array_attributes' => attributes }]
+          if @mode == 'xml'
+            [parse_object(object['items']), { '__array_attributes' => attributes }]
+          else
+            [parse_object(object['items'])]
+          end
         else
           raise StandardError.new("parse_array: Don't know how to parse object")
         end
