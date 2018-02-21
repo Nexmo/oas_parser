@@ -58,5 +58,10 @@ module OasParser
     def xml_name
       raw['xml']['name']
     end
+
+    def subproperties_are_one_of_many?
+      return false unless array?
+      items['oneOf'].present?
+    end
   end
 end

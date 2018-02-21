@@ -38,10 +38,5 @@ module OasParser
         end
       end
     end
-
-    def subproperties_are_one_of_many?
-      return false unless array?
-      items['oneOf'].present?
-    end
   end
 end
