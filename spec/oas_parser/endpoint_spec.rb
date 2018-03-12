@@ -120,6 +120,36 @@ RSpec.describe OasParser::Endpoint do
     end
   end
 
+  describe '#basic_auth?' do
+    it 'returns a boolean indicating if the endpoint uses Basic Auth authentication' do
+      expect(@endpoint.basic_auth?).to eq(false)
+    end
+
+    context 'when the definition provides a security scheme with JWT' do
+      before do
+        allow(@definition).to receive(:components) { { 'securitySchemes' => { 'foo' => { 'type' => 'http', 'scheme' => 'basic' } } } }
+      end
+
+      it 'returns false when the definition does not subscribe to the security scheme' do
+        expect(@endpoint.basic_auth?).to eq(false)
+      end
+
+      context 'definition subscribes to the securitys scheme' do
+        it 'returns true' do
+          allow(@definition).to receive(:security) { [{ 'foo' => [] }] }
+          expect(@endpoint.basic_auth?).to eq(true)
+        end
+      end
+
+      context 'endpoint subscribes to the securitys scheme' do
+        it 'returns true' do
+          allow(@endpoint).to receive(:security) { [{ 'foo' => [] }] }
+          expect(@endpoint.basic_auth?).to eq(true)
+        end
+      end
+    end
+  end
+
   describe '#security_schemes' do
     it 'returns a boolean indicating if the endpoint uses JWT authentication' do
       expect(@endpoint.security_schemes).to eq([])
