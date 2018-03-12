@@ -28,7 +28,16 @@ module OasParser
       array? || object?
     end
 
+    def empty?
+      raise 'Called empty? on non collection type' unless collection?
+      return true if object? && raw['properties'].blank?
+      return true if array? && items.blank?
+      false
+    end
+
     def properties
+      return nil unless collection?
+      return [] if empty?
       return convert_property_schema_to_properties(raw['properties']) if object?
       return convert_property_schema_to_properties(items) if array?
       nil
