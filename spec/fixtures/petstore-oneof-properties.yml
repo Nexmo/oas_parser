@@ -1,0 +1,58 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Card
+  description: An example exploring the use of oneOf with properties
+servers:
+  - url: http://petstore.swagger.io/api
+paths:
+  /cards:
+    post:
+      description: Create cards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createCards'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    createCards:
+      type: object
+      properties:
+        cards:
+          description: Schema for the cards
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/PlayingCard'
+              - $ref: '#/components/schemas/BaseballCard'
+    PlayingCard:
+      type: object
+      description: Playing Card
+      required:
+        - rank
+        - suite
+      properties:
+        rank:
+          type: string
+          example: 'K'
+        suite:
+          type: string
+          example: 'clubs'
+    BaseballCard:
+      type: object
+      description: Baseball Card
+      required:
+        - rank
+        - suite
+      properties:
+        player:
+          type: string
+          example: 'Mickey Mantle'
+        team:
+          type: string
+          example: 'Yankees'

@@ -105,5 +105,31 @@ RSpec.describe OasParser::Property do
       expect(@attributes_property.properties[0].name).to eq('id')
       expect(@attributes_property.properties[0].type).to eq('string')
     end
+
+    context 'when the property is an array with anyOf' do
+      before do
+        @definition = OasParser::Definition.resolve('spec/fixtures/petstore-oneof-properties.yml')
+        @path = @definition.path_by_path('/cards')
+        @endpoint = @path.endpoint_by_method('post')
+        @request_body = @endpoint.request_body
+        @properties = @request_body.properties_for_format('application/json')
+        @cards_property = @properties[0]
+
+        puts @card_property
+      end
+
+      it 'can be used to return collection properties' do
+        expect(@cards_property.name).to eq('cards')
+        expect(@cards_property.type).to eq('array')
+        expect(@cards_property.subproperties_are_one_of_many?).to eq(true)
+        expect(@cards_property.properties.class).to eq(Array)
+        expect(@cards_property.properties[0].class).to eq(Hash)
+        expect(@cards_property.properties[0]['description']).to eq('Playing Card')
+        expect(@cards_property.properties[1]['description']).to eq('Baseball Card')
+        expect(@cards_property.properties[0]['properties'][0].class).to eq(OasParser::Property)
+        expect(@cards_property.properties[0]['properties'].size).to eq(2)
+        expect(@cards_property.properties[0]['properties'][0].name).to eq('rank')
+      end
+    end
   end
 end
