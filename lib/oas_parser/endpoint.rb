@@ -96,6 +96,16 @@ module OasParser
       false
     end
 
+    def basic_auth?
+      return false unless security
+
+      security_schemes.each do |security_schema|
+        return true if security_schema['type'] == 'http' && security_schema['scheme'] == 'basic'
+      end
+
+      false
+    end
+
     def security_schemes
       security_schemes = security.flat_map(&:keys)
 
