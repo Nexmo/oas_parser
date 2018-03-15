@@ -125,7 +125,7 @@ RSpec.describe OasParser::Endpoint do
       expect(@endpoint.basic_auth?).to eq(false)
     end
 
-    context 'when the definition provides a security scheme with JWT' do
+    context 'when the definition provides a security scheme that is BasicAuth' do
       before do
         allow(@definition).to receive(:components) { { 'securitySchemes' => { 'foo' => { 'type' => 'http', 'scheme' => 'basic' } } } }
       end
