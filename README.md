@@ -57,6 +57,46 @@ Run tests:
 $ rspec
 ```
 
+### Publishing
+
+Clone the repo and navigate to its directory:
+
+```
+$ cd oas-parser
+```
+
+Bump the latest version in `oas_parser/lib/oas_parser/version.rb`:
+
+```
+//old
+module OasParser
+  VERSION = '1.0.0'.freeze
+end
+
+//new
+module OasParser
+  VERSION = '1.1.0'.freeze
+end
+```
+
+Build the gem:
+
+```
+$ gem build oas_parser.gemspec
+```
+
+_This will create a `oas_parser-1.1.0.gem` file._
+
+Push the gem to rubygems.org:
+
+```
+$ gem push oas_parser-1.1.0.gem
+```
+
+Verify the change was made by checking for the [new version on rubygems.org](https://rubygems.org/gems/oas_parser)
+
+
+
 ## Contributing
 
 Contributions are welcome, please follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html)
