@@ -2,16 +2,22 @@ module OasParser
   class Definition
     include OasParser::RawAccessor
     raw_keys :info, :servers, :components, :openapi
+    attr_reader :path
 
     attr_accessor :raw
 
     def self.resolve(path)
       raw = Parser.resolve(path)
-      Definition.new(raw)
+      Definition.new(raw, path)
     end
 
-    def initialize(raw)
+    def initialize(raw, path)
       @raw = raw
+      @path = path
+    end
+
+    def format
+      File.extname(@path).sub('.', '')
     end
 
     def paths
