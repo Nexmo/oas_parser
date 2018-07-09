@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "json_schema", "~> 0.15.0"
   spec.add_dependency "guard-rspec", "~> 4.7.3"
   spec.add_dependency "deep_merge", "~> 1.2.1"
-  spec.add_dependency "activesupport", "< 6"
+  spec.add_dependency "activesupport", "> 5.1.2", "< 6"
   spec.add_dependency "builder", "~> 3.2.3"
   spec.add_dependency "nokogiri", "~> 1.8.1"
 
