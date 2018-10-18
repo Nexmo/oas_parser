@@ -16,6 +16,10 @@ module OasParser
       raw['enum'] || (schema ? schema['enum'] : nil)
     end
 
+    def oneOf?
+      raw['oneOf'] ? true : false
+    end
+
     def array?
       type == 'array'
     end
@@ -36,6 +40,7 @@ module OasParser
     end
 
     def properties
+      return convert_property_schema_to_properties(raw) if oneOf?
       return nil unless collection?
       return [] if empty?
       return convert_property_schema_to_properties(raw['properties']) if object?

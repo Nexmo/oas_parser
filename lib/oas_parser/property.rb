@@ -29,7 +29,7 @@ module OasParser
       elsif schema['subschema_property']
         schema = schema['properties'] if schema['properties']
         schema.map do |definition|
-          OasParser::Property.new(self, raw, definition.name, definition)
+          OasParser::Property.new(self, raw, definition.name, definition.raw)
         end
       else
         schema = schema['properties'] if schema['properties']
