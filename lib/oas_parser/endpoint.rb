@@ -49,7 +49,7 @@ module OasParser
         return parameter if parameter.name == name
       end
 
-      raise StandardError.new('So such parameter exists')
+      raise StandardError.new("No such parameter exists: '#{name}'")
     end
 
     def request_body

@@ -214,7 +214,7 @@ RSpec.describe OasParser::Endpoint do
       it 'raises an exception' do
         expect {
           @endpoint.parameter_by_name('foo')
-        }.to raise_error(StandardError, 'So such parameter exists')
+        }.to raise_error(StandardError, "No such parameter exists: 'foo'")
       end
     end
   end
