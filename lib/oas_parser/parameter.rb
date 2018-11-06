@@ -6,6 +6,7 @@ module OasParser
     attr_accessor :owner, :raw
 
     def initialize(owner, raw)
+      super(raw['name'])
       @owner = owner
       @raw = raw
     end

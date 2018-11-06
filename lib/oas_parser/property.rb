@@ -7,8 +7,8 @@ module OasParser
     attr_writer :name
 
     def initialize(owner, schema, name, raw)
+      super(name)
       @owner = owner
-      @name = name
       @schema = schema
       @raw = raw
     end
