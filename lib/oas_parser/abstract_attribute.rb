@@ -2,6 +2,10 @@ module OasParser
   class AbstractAttribute
     include OasParser::RawAccessor
 
+    def initialize(name)
+      @name = name
+    end
+
     def name(format = nil)
       default = @name || raw['name']
       return default unless format
