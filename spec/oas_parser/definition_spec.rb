@@ -62,6 +62,10 @@ RSpec.describe OasParser::Definition do
       expect(@definition.path_by_path('/pets').class).to eq(OasParser::Path)
     end
 
+    it 'finds a path template by path' do
+      expect(@definition.path_by_path('/pets/1').class).to eq(OasParser::Path)
+    end
+
     context 'when given an invalid path' do
       it 'raises an exception' do
         expect {

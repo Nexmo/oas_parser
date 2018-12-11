@@ -1,3 +1,5 @@
+require 'mustermann/template'
+
 module OasParser
   class Definition
     include OasParser::RawAccessor
@@ -27,7 +29,12 @@ module OasParser
     end
 
     def path_by_path(path)
-      definition = raw['paths'][path]
+      definition = raw['paths'].fetch(path) do |path|
+        key = raw['paths'].keys.detect do |path_entry|
+          Mustermann::Template.new(path_entry).match(path)
+        end
+        raw['paths'][key]
+      end
       raise StandardError.new('So such path exists') unless definition
       OasParser::Path.new(self, path, definition)
     end

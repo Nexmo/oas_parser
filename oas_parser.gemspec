@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "deep_merge", "~> 1.2.1"
   spec.add_dependency "activesupport", "> 5.1.2", "< 6"
   spec.add_dependency "builder", "~> 3.2.3"
+  spec.add_dependency "mustermann-contrib", "~> 1.0.3s"
   spec.add_dependency "nokogiri", "~> 1.8.1"
 
   spec.add_development_dependency "bundler", "~> 1.16"
