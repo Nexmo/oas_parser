@@ -49,9 +49,7 @@ RSpec.describe OasParser::Path do
 
     context 'when given an invalid method' do
       it 'raises an exception' do
-        expect {
-          @path.endpoint_by_method('foo')
-        }.to raise_error(StandardError, 'So such endpoint exists')
+        expect(@path.endpoint_by_method('foo')).to be_nil
       end
     end
   end

@@ -68,9 +68,7 @@ RSpec.describe OasParser::Definition do
 
     context 'when given an invalid path' do
       it 'raises an exception' do
-        expect {
-          @definition.path_by_path('/foo')
-        }.to raise_error(StandardError, 'So such path exists')
+        expect(@definition.path_by_path('/foo')).to be_nil
       end
     end
   end

@@ -45,11 +45,9 @@ module OasParser
     end
 
     def parameter_by_name(name)
-      parameters.each do |parameter|
-        return parameter if parameter.name == name
+      parameters.detect do |parameter|
+        parameter.name == name
       end
-
-      raise StandardError.new("No such parameter exists: '#{name}'")
     end
 
     def request_body
@@ -65,8 +63,7 @@ module OasParser
 
     def response_by_code(code)
       definition = raw['responses'][code]
-      raise StandardError.new('So such response exists') unless definition
-      OasParser::Response.new(self, code, definition)
+      OasParser::Response.new(self, code, definition) if definition
     end
 
     def security
@@ -82,8 +79,7 @@ module OasParser
 
     def callback_by_name(name)
       definition = raw['callbacks'][name]
-      raise StandardError.new('So such callback exists') unless definition
-      OasParser::Callback.new(self, name, definition)
+      OasParser::Callback.new(self, name, definition) if definition
     end
 
     def jwt?

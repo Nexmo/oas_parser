@@ -35,8 +35,7 @@ module OasParser
         end
         raw['paths'][key]
       end
-      raise StandardError.new('So such path exists') unless definition
-      OasParser::Path.new(self, path, definition)
+      OasParser::Path.new(self, path, definition) if definition
     end
 
     def security

@@ -198,9 +198,7 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid method' do
       it 'raises an exception' do
-        expect {
-          @endpoint.response_by_code('foo')
-        }.to raise_error(StandardError, 'So such response exists')
+        expect(@endpoint.response_by_code('foo')).to be_nil
       end
     end
   end
@@ -212,9 +210,7 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid name' do
       it 'raises an exception' do
-        expect {
-          @endpoint.parameter_by_name('foo')
-        }.to raise_error(StandardError, "No such parameter exists: 'foo'")
+        expect(@endpoint.parameter_by_name('foo')).to be_nil
       end
     end
   end
@@ -232,9 +228,7 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid name' do
       it 'raises an exception' do
-        expect {
-          @endpoint.callback_by_name('foo')
-        }.to raise_error(StandardError, 'So such callback exists')
+        expect(@endpoint.callback_by_name('foo')).to be_nil
       end
     end
   end
