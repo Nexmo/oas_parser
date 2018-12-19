@@ -1,12 +1,8 @@
-require 'mustermann/template'
-
 module OasParser
-  class Definition
-    include OasParser::RawAccessor
-    raw_keys :info, :servers, :components, :openapi
-    attr_reader :path
+  attr_reader :info
 
-    attr_accessor :raw
+  class Definition
+    attr_accessor :info
 
     def self.resolve(path)
       raw = Parser.resolve(path)
@@ -16,35 +12,8 @@ module OasParser
     def initialize(raw, path)
       @raw = raw
       @path = path
-    end
 
-    def format
-      File.extname(@path).sub('.', '')
-    end
-
-    def paths
-      raw['paths'].map do |path, definition|
-        OasParser::Path.new(self, path, definition)
-      end
-    end
-
-    def path_by_path(path)
-      definition = raw['paths'].fetch(path) do |path|
-        key = raw['paths'].keys.detect do |path_entry|
-          Mustermann::Template.new(path_entry).match(path)
-        end
-        raw['paths'][key]
-      end
-      raise StandardError.new('So such path exists') unless definition
-      OasParser::Path.new(self, path, definition)
-    end
-
-    def security
-      raw['security'] || []
-    end
-
-    def endpoints
-      paths.flat_map(&:endpoints)
+      @info = OasParser::Info.new(raw['info'])
     end
   end
 end

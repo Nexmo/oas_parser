@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    oas_parser (0.15.1)
+    oas_parser (1.0.0)
       activesupport (> 5.1.2, < 6)
       addressable (~> 2.3)
       builder (~> 3.2.3)
