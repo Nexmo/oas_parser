@@ -4,10 +4,10 @@ RSpec.describe OasParser::Definition do
   end
 
   it 'parses references from a definition file' do
-    expect(@definition.class).to eq(OasParser::Definition)
+    expect(@definition).to be_kind_of(OasParser::Definition)
   end
 
   it 'parses the info section' do
-    expect(@definition.info.class).to eq(OasParser::Info)
+    expect(@definition.info).to be_kind_of(OasParser::Info)
   end
 end

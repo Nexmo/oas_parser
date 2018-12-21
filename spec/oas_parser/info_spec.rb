@@ -10,6 +10,14 @@ RSpec.describe OasParser::Info do
     )
   end
 
+  it 'raises if required field "title" does not exist' do
+    expect { described_class.new({'version' => '1.2.3'}) }.to raise_error(OasParser::InvalidInfoError)
+  end
+
+  it 'raises if required field "version" does not exist' do
+    expect { described_class.new({'title' => 'Demo'}) }.to raise_error(OasParser::InvalidInfoError)
+  end
+
   it 'exposes the title' do
     expect(@info.title).to eq('Test OAS')
   end
@@ -27,10 +35,10 @@ RSpec.describe OasParser::Info do
   end
 
   it 'exposes the contact' do
-    expect(@info.contact.class).to eq(OasParser::Contact)
+    expect(@info.contact).to be_kind_of(OasParser::Contact)
   end
 
   it 'exposes the license' do
-    expect(@info.license.class).to eq(OasParser::License)
+    expect(@info.license).to be_kind_of(OasParser::License)
   end
 end

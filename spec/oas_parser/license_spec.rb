@@ -9,6 +9,10 @@ RSpec.describe OasParser::License do
     )
   end
 
+  it 'raises if required field "name" does not exist' do
+    expect { described_class.new({}) }.to raise_error(OasParser::InvalidLicenseError)
+  end
+
   it 'exposes the name' do
     expect(@license.name).to eq(@license_name)
   end
@@ -16,4 +20,9 @@ RSpec.describe OasParser::License do
   it 'exposes the url' do
     expect(@license.url).to eq(@license_url)
   end
+
+  it 'has a default url' do
+    expect(described_class.new({'name' => 'Demo'}).url).to eq('')
+  end
+
 end
