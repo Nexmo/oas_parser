@@ -4,14 +4,14 @@ module OasParser
   class Definition
     attr_accessor :openapi, :info, :servers
 
-    def self.resolve(path)
-      raw = Parser.resolve(path)
-      Definition.new(raw, path)
+    def self.resolve(filename)
+      raw = Parser.resolve(filename)
+      Definition.new(raw, filename)
     end
 
-    def initialize(raw, path)
+    def initialize(raw, filename)
       @raw = raw
-      @path = path
+      @filename = filename
 
       @info = OasParser::Info.new(raw['info'])
       @servers = raw['servers'].map { |s| OasParser::Server.new(s) }
