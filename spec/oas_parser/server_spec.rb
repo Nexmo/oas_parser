@@ -25,6 +25,7 @@ RSpec.describe OasParser::Server do
 
   it 'exposes the variables if provided' do
     expect(@server.variables).to be_kind_of(Hash)
+    expect(@server.variables['username']).to be_kind_of(OasParser::ServerVariable)
   end
 
   it 'provides default values' do
