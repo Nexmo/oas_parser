@@ -5,7 +5,7 @@ module OasParser
     end
 
     def resolve(document)
-      return document if escaped_pointer == ""
+      return document if escaped_pointer == ''
 
       tokens.reduce(document) do |nested_doc, token|
         nested_doc.fetch(token)
@@ -15,7 +15,7 @@ module OasParser
     private
 
     def escaped_pointer
-      if @raw_pointer.start_with?("#")
+      if @raw_pointer.start_with?('#')
         Addressable::URI.unencode(@raw_pointer[1..-1])
       else
         @raw_pointer
@@ -26,16 +26,14 @@ module OasParser
       if token =~ /\A\d+\z/
         token.to_i
       else
-        token.gsub("~0", "~").gsub("~1", "/")
+        token.gsub('~0', '~').gsub('~1', '/')
       end
     end
 
     def tokens
-      tokens = escaped_pointer[1..-1].split("/")
+      tokens = escaped_pointer[1..-1].split('/')
 
-      if @raw_pointer.end_with?("/")
-        tokens << ""
-      end
+      tokens << '' if @raw_pointer.end_with?('/')
 
       tokens.map do |token|
         parse_token(token)

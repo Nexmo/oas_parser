@@ -7,7 +7,7 @@ module OasParser
 
       @url = raw['url']
       @description = raw['description'] || ''
-      @variables = raw['variables'].nil? ? {} : raw['variables'].map do |k,v|
+      @variables = raw['variables'].nil? ? {} : raw['variables'].map do |k, v|
         [k, ServerVariable.new(v)]
       end.to_h || {}
     end

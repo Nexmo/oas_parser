@@ -2,7 +2,7 @@ module OasParser
   attr_reader :info
 
   class Definition
-    attr_accessor :openapi, :info, :servers
+    attr_accessor :openapi, :info, :servers, :paths
 
     def self.resolve(filename)
       raw = Parser.resolve(filename)
@@ -15,6 +15,11 @@ module OasParser
 
       @info = OasParser::Info.new(raw['info'])
       @servers = raw['servers'].map { |s| OasParser::Server.new(s) }
+      @paths = raw['paths'].map { |path, details| [path, OasParser::PathItem.new(details)] }.to_h
+    end
+
+    def path(path)
+      @paths[path]
     end
   end
 end

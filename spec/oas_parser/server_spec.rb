@@ -4,9 +4,9 @@ RSpec.describe OasParser::Server do
       'url' => 'https://example.com',
       'description' => 'This is a server base URL',
       'variables' => {
-          'username' => {
-              'default' => 'demo'
-          }
+        'username' => {
+          'default' => 'demo'
+        }
       }
     )
   end
@@ -30,7 +30,7 @@ RSpec.describe OasParser::Server do
 
   it 'provides default values' do
     minimal_server = described_class.new(
-        'url' => 'https://example.com'
+      'url' => 'https://example.com'
     )
     expect(minimal_server.description).to eq('')
     expect(minimal_server.variables).to eq({})

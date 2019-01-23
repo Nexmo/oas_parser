@@ -22,7 +22,6 @@ RSpec.describe OasParser::License do
   end
 
   it 'has a default url' do
-    expect(described_class.new({'name' => 'Demo'}).url).to eq('')
+    expect(described_class.new('name' => 'Demo').url).to eq('')
   end
-
 end
