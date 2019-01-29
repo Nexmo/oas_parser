@@ -33,11 +33,13 @@ module OasParser
     def expand_refs(fragment)
       if fragment.is_a?(Hash) && fragment.has_key?("$ref")
         ref = fragment["$ref"]
-
-        if ref =~ /\Afile:/
+        if ref=~ /^#/
+          expand_pointer(ref)
+        elsif ref =~ /\Afile:/
           expand_file(ref)
         else
-          expand_pointer(ref)
+          #format: {"$ref"=>"examples/Snapshots_Update.json"}
+          expand_file(ref)
         end
       else
         fragment
