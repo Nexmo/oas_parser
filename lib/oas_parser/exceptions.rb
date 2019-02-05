@@ -45,4 +45,11 @@ module OasParser
       super(msg)
     end
   end
+
+  # Response errors
+  class InvalidResponseError < InvalidSchemaError
+    def initialize(msg = 'Invalid Response provided. See https://swagger.io/specification/#responseObject')
+      super(msg)
+    end
+  end
 end

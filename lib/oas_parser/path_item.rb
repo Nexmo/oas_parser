@@ -17,7 +17,7 @@ module OasParser
       @servers = []
       @servers = raw['servers'].map { |s| OasParser::Server.new(s) } if raw['servers']
 
-      @parameters = {} # TODO: Map from raw input
+      @parameters = raw['parameters'].map { |p| OasParser::Parameter.new(p) } if raw['parameters']
     end
   end
 end

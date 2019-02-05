@@ -118,7 +118,7 @@ RSpec.describe OasParser::PathItem do
   end
 
   it 'exposes parameters' do
-    expect(@path_item.parameters).to be_kind_of(Hash)
-    # TODO: Inspect one of the params
+    expect(@path_item.parameters).to be_kind_of(Array)
+    expect(@path_item.parameters[0]).to be_kind_of(OasParser::Parameter)
   end
 end

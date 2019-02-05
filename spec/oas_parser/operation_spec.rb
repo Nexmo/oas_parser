@@ -19,6 +19,24 @@ RSpec.describe OasParser::Operation do
         'content' => {
           'application/json' => {}
         }
+      },
+      'callbacks' => {
+          'test_callback' => {
+              '/foo' => {
+                  'post' => {
+                      'responses' => {
+                          '200' => {
+                              'description' => 'Successful Request'
+                          }
+                      }
+                  },
+              }
+          }
+      },
+      'security' => {
+          'petstore_auth' => [
+              'pets:write'
+          ]
       }
     )
   end
@@ -63,5 +81,16 @@ RSpec.describe OasParser::Operation do
   it 'exposes servers' do
     expect(@operation.servers).to be_kind_of(Array)
     expect(@operation.servers[0]).to be_kind_of(OasParser::Server)
+  end
+
+  it 'exposes callbacks' do
+    expect(@operation.callbacks).to be_kind_of(Hash)
+    expect(@operation.callbacks['test_callback']).to be_kind_of(OasParser::PathItem)
+  end
+
+  it 'exposes security' do
+    expect(@operation.security).to be_kind_of(Hash)
+    expect(@operation.security['petstore_auth']).to be_kind_of(Array)
+    expect(@operation.security['petstore_auth'][0]).to eql('pets:write')
   end
 end

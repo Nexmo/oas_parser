@@ -1,7 +1,12 @@
 module OasParser
   class Response
+    attr_accessor :description, :headers, :content, :links
     def initialize(raw)
-      # TODO: Implement
+      raise InvalidResponseError unless raw['description']
+      @description = raw['description']
+      @headers = {} # TODO
+      @content = {} # TODO
+      @links: {} # TODO
     end
   end
 end
