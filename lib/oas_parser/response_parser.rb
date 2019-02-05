@@ -68,6 +68,7 @@ module OasParser
       when 'object'
         parse_object(root_object)
       when 'array' then parse_array(root_object)
+      when 'string' then root_object['example']
       when nil
         return nil if root_object['additionalProperties'] == false
         return nil if root_object['properties'] == {}
