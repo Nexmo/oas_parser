@@ -16,8 +16,8 @@ module OasParser
       @external_docs = OasParser::ExternalDocs.new(raw['externalDocs']) if raw['externalDocs']
       @request_body = OasParser::RequestBody.new(raw['requestBody']) if raw['requestBody']
       @parameters = raw['parameters'].map { |s| OasParser::Parameter.new(s) } if raw['parameters']
-      @callbacks = {} # TODO: Map from raw input
-      @security = [] # TODO: Map from raw input
+      @callbacks = raw['callbacks'].map { |name, details| [name, OasParser::PathItem.new(details)] }.to_h if raw['callbacks']
+      @security = raw['security'] if raw['security'] # This is a key => [string] map, so there's no data type
 
       @servers = raw['servers'].map { |s| OasParser::Server.new(s) } if raw['servers']
     end
