@@ -8,6 +8,7 @@ module OasParser
     def initialize(path, content)
       @path = path
       @content = content
+      @pointers_resolved = Hash.new
     end
 
     def resolve
@@ -18,7 +19,6 @@ module OasParser
 
     def deeply_expand_refs(fragment)
       fragment = expand_refs(fragment)
-
       if fragment.is_a?(Hash)
         fragment.reduce({}) do |hash, (k, v)|
           hash.merge(k => deeply_expand_refs(v))
@@ -67,10 +67,26 @@ module OasParser
     end
 
     def expand_pointer(ref, content=nil)
-      pointer = OasParser::Pointer.new(ref)
-      fragment = pointer.resolve(content || @content)
+      unless @pointers_resolved.key?(ref)
+        @pointers_resolved[ref] = nil
+        pointer = OasParser::Pointer.new(ref)
+        fragment = pointer.resolve(content || @content)
+        fragment = remove_recursive(fragment, ref)
+        @pointers_resolved[ref] = expand_refs(fragment)
+      end
+      @pointers_resolved[ref]
+    end
 
-      expand_refs(fragment)
+    def remove_recursive(fragment, ref)
+      fragment.each do |k,v|
+        if v.is_a?(Hash)
+          v = remove_recursive(v,ref)
+        elsif v.to_s == ref
+          warn "Error tryng to parse. Recursive on #{ref}"
+          fragment.delete(k)
+        end
+      end
+      fragment
     end
 
     def expand_url(ref)
