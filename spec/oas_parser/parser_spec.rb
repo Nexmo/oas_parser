@@ -15,8 +15,8 @@ RSpec.describe OasParser::Parser do
 
   it 'detects recursive references' do
     definition = OasParser::Parser.resolve('spec/fixtures/petstore-recursive.yml')
-    puts definition
-
+    definition =  definition["components"]["schemas"]["UserInfoOut"]["properties"]["otherInfos"]["items"][0]
+    expect(definition["properties"]["otherInfos"]["items"][0].size).to eq 0
   end
 
 end

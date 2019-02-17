@@ -79,7 +79,8 @@ module OasParser
 
     def remove_recursive(fragment, ref)
       fragment.each do |k,v|
-        if v.is_a?(Hash)
+        v=k if v.nil?
+        if v.is_a?(Hash) or v.is_a?(Array)
           v = remove_recursive(v,ref)
         elsif v.to_s == ref
           warn "Error tryng to parse. Recursive on #{ref}"
