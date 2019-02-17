@@ -13,4 +13,10 @@ RSpec.describe OasParser::Parser do
                             'content', 'application/json', 'schema', 'items', 'allOf').map {|h| h['properties'].keys }.flatten).to eq (['name', 'tag', 'id'])
   end
 
+  it 'detects recursive references' do
+    definition = OasParser::Parser.resolve('spec/fixtures/petstore-recursive.yml')
+    puts definition
+
+  end
+
 end
