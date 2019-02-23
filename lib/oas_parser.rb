@@ -16,8 +16,6 @@ Dir["#{File.dirname(__FILE__)}/oas_parser/**/*.rb"].each do |file|
   require file
 end
 
-File.expand_path('path', File.dirname(__FILE__))
-
 module OasParser
   # Your code goes here...
 end
