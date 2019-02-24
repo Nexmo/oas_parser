@@ -35,7 +35,7 @@ module OasParser
         end
         raw['paths'][key]
       end
-      raise StandardError.new('So such path exists') unless definition
+      raise OasParser::PathNotFound.new("Path not found: '#{path}'") unless definition
       OasParser::Path.new(self, path, definition)
     end
 
