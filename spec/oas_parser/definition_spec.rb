@@ -70,7 +70,7 @@ RSpec.describe OasParser::Definition do
       it 'raises an exception' do
         expect {
           @definition.path_by_path('/foo')
-        }.to raise_error(StandardError, 'So such path exists')
+        }.to raise_error(OasParser::PathNotFound, "Path not found: '/foo'")
       end
     end
   end

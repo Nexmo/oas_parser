@@ -49,7 +49,7 @@ module OasParser
         return parameter if parameter.name == name
       end
 
-      raise StandardError.new("No such parameter exists: '#{name}'")
+      raise OasParser::ParameterNotFound.new("Parameter not found: '#{name}'")
     end
 
     def request_body
@@ -65,7 +65,7 @@ module OasParser
 
     def response_by_code(code)
       definition = raw['responses'][code]
-      raise StandardError.new('So such response exists') unless definition
+      raise OasParser::ResponseCodeNotFound.new("Response code not found: '#{code}'") unless definition
       OasParser::Response.new(self, code, definition)
     end
 
@@ -82,7 +82,7 @@ module OasParser
 
     def callback_by_name(name)
       definition = raw['callbacks'][name]
-      raise StandardError.new('So such callback exists') unless definition
+      raise OasParser::CallbackNotFound.new("Callback not found: '#{name}'") unless definition
       OasParser::Callback.new(self, name, definition)
     end
 

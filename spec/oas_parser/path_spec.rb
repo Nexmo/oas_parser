@@ -51,7 +51,7 @@ RSpec.describe OasParser::Path do
       it 'raises an exception' do
         expect {
           @path.endpoint_by_method('foo')
-        }.to raise_error(StandardError, 'So such endpoint exists')
+        }.to raise_error(OasParser::MethodNotFound, "HTTP method not found: 'foo'")
       end
     end
   end
