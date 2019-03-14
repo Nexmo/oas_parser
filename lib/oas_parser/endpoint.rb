@@ -63,8 +63,9 @@ module OasParser
       end
     end
 
-    def response_by_code(code)
+    def response_by_code(code, use_default: false)
       definition = raw['responses'][code]
+      definition ||= raw['responses']['default'] if use_default
       raise OasParser::ResponseCodeNotFound.new("Response code not found: '#{code}'") unless definition
       OasParser::Response.new(self, code, definition)
     end
