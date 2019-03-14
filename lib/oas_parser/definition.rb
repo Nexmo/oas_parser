@@ -29,14 +29,15 @@ module OasParser
     end
 
     def path_by_path(path)
-      definition = raw['paths'].fetch(path) do |path|
-        key = raw['paths'].keys.detect do |path_entry|
-          Mustermann::Template.new(path_entry).match(path)
-        end
-        raw['paths'][key]
+      definition = raw['paths'][path]
+      return OasParser::Path.new(self, path, definition) if definition
+
+      key = raw['paths'].keys.detect do |path_entry|
+        Mustermann::Template.new(path_entry).match(path)
       end
+      definition = raw['paths'][key]
       raise OasParser::PathNotFound.new("Path not found: '#{path}'") unless definition
-      OasParser::Path.new(self, path, definition)
+      OasParser::Path.new(self, key, definition)
     end
 
     def security
