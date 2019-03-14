@@ -196,7 +196,22 @@ RSpec.describe OasParser::Endpoint do
       expect(@endpoint.response_by_code('200').class).to eq(OasParser::Response)
     end
 
-    context 'when given an invalid method' do
+    context 'use default' do
+      it 'returns the "default" response if no matching response was found' do
+        response = @endpoint.response_by_code('422', use_default: true)
+        expect(response.class).to eq(OasParser::Response)
+        expect(response.code).to eq('422')
+        expect(response.description).to eq('unexpected error')
+      end
+
+      it 'returns the matching response' do
+        response = @endpoint.response_by_code('200', use_default: true)
+        expect(response.class).to eq(OasParser::Response)
+        expect(response.code).to eq('200')
+      end
+    end
+
+    context 'when given an unknown status' do
       it 'raises an exception' do
         expect {
           @endpoint.response_by_code('foo')
