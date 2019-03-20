@@ -33,7 +33,7 @@ module OasParser
 
     def security_schema_parameters
       raw_security_schema_parameters = security_schemes.select do |security_schema|
-        security_schema['in'].present? && security_schema['in'].present?
+        !security_schema['in'].empty? && !security_schema['in'].empty?
       end
 
       security_schema_parameter_defaults = {
