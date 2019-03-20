@@ -38,8 +38,8 @@ module OasParser
 
     def empty?
       raise 'Called empty? on non collection type' unless collection?
-      return true if object? && raw['properties'].blank?
-      return true if array? && items.blank?
+      return true if object? && raw['properties']&.empty?
+      return true if array? && items&.empty?
       false
     end
 
@@ -53,7 +53,7 @@ module OasParser
     end
 
     def has_xml_options?
-      raw['xml'].present?
+      raw['xml'].any?
     end
 
     def is_xml_attribute?
@@ -79,7 +79,7 @@ module OasParser
 
     def subproperties_are_one_of_many?
       return false unless array?
-      items['oneOf'].present?
+      items['oneOf'].any?
     end
   end
 end

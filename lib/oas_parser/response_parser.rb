@@ -188,7 +188,7 @@ module OasParser
     end
 
     def has_xml_options?(object)
-      object['xml'].present?
+      object['xml']&.any?
     end
 
     def is_xml_attribute?(object)
