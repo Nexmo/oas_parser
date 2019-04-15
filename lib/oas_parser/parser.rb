@@ -71,19 +71,31 @@ module OasParser
         @pointers_resolved[ref] = nil
         pointer = OasParser::Pointer.new(ref)
         fragment = pointer.resolve(content || @content)
+        # If this fragment contains any recursive definitions, remove them
         fragment = remove_recursive(fragment, ref)
+
         @pointers_resolved[ref] = expand_refs(fragment)
       end
       @pointers_resolved[ref]
     end
 
     def remove_recursive(fragment, ref)
-      fragment.each do |k,v|
+      # This method checks `fragment` (which is a data structure) for any usage
+      # of `ref`, which is a string. This is called whenever a reference is
+      # detected when resolving a pointer.
+      #
+      # If we follow a pointer (which gives us `fragment`) and find `ref` in any
+      # fields contained within that fragment, we have a recursive definition
+       fragment.each do |k,v|
+
+        # If it's an array there isn't a key, so take the entire
+        # entry as the value
         v=k if v.nil?
+
         if v.is_a?(Hash) or v.is_a?(Array)
           v = remove_recursive(v,ref)
         elsif v.to_s == ref
-          warn "Error tryng to parse. Recursive on #{ref}"
+          warn "Error trying to parse. Recursive on #{ref}"
           fragment.delete(k)
         end
       end

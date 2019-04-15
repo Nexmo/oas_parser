@@ -14,9 +14,9 @@ info:
 servers:
   - url: http://petstore.swagger.io/api
 paths:
-  /owners:
+  /pet:
     get:
-      description: Get an owner
+      description: Get pet
       operationId: findPets
       responses:
         '200':
@@ -27,15 +27,6 @@ paths:
                 $ref: '#/components/schemas/Pet'
 components:
   schemas:
-    Human:
-      type: object
-      properties:
-        name:
-          type: string
-        pets:
-          type: array
-          items:
-            - $ref: '#/components/schemas/Pet'
     Pet:
       type: object
       properties:
@@ -44,4 +35,4 @@ components:
         children:
           type: array
           items:
-            - $ref: '#/components/schemas/Human'
+            - $ref: '#/components/schemas/Pet'

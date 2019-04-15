@@ -13,10 +13,16 @@ RSpec.describe OasParser::Parser do
                             'content', 'application/json', 'schema', 'items', 'allOf').map {|h| h['properties'].keys }.flatten).to eq (['name', 'tag', 'id'])
   end
 
-  it 'detects recursive references' do
-    definition = OasParser::Parser.resolve('spec/fixtures/petstore-recursive.yml')
-    definition =  definition["components"]["schemas"]["UserInfoOut"]["properties"]["otherInfos"]["items"][0]
-    expect(definition["properties"]["otherInfos"]["items"][0].size).to eq 0
+ it 'removes recursive references (Human->Pet->Human)' do
+   definition = OasParser::Parser.resolve('spec/fixtures/petstore-recursive.yml')
+   r = definition['components']['schemas']['Human']['properties']['pets']
+   expect(r['items'].size).to eq 0
+ end
+
+  it 'removes self-referencing references' do
+    definition = OasParser::Parser.resolve('spec/fixtures/petstore-self-referential.yml')
+    r = definition['components']['schemas']['Pet']['properties']['children']
+    expect(r['items'][0]).to eq({})
   end
 
 end
