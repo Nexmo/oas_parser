@@ -49,21 +49,14 @@ module OasParser
     def expand_file(ref)
       absolute_path = File.expand_path(File.join("..", ref), @path)
       absolute_path, local_reference = absolute_path.split('#')
-      if local_reference
-        # skip first item in the split array, it is blank
-        local_reference_path = local_reference.split('/')[1..-1]
-        resolved_remote_reference = Parser.resolve(absolute_path)
+      resolved_remote_reference = Parser.resolve(absolute_path)
 
-        # expand the pointer included as part of the remote reference 
-        # within the context of the remote reference
-        expanded_pointer = expand_pointer('#' + local_reference, resolved_remote_reference)
-        
-        # extract the local reference data from the remote remote reference
-        # and include the expanded pointer
-        resolved_remote_reference.dig(*local_reference_path).merge(expanded_pointer)
-      else
-        Parser.resolve(absolute_path)
+      if local_reference
+        pointer = OasParser::Pointer.new(local_reference)
+        return pointer.resolve(resolved_remote_reference)
       end
+
+      resolved_remote_reference
     end
 
     def expand_pointer(ref, content=nil)
