@@ -15,7 +15,8 @@ servers:
   - url: http://petstore.swagger.io/api
 paths:
   /pets:
-    $ref: './petstore-remote-reference-pets.yml'
+    get:
+      $ref: petstore-remote-reference-pets.yml#/paths/~1pets/get
 
   /pets/{id}:
     get:
