@@ -23,6 +23,12 @@ RSpec.describe OasParser::Endpoint do
     end
   end
 
+  describe '#operation_id' do
+    it 'returns the endpoint operationId' do
+      expect(@endpoint.operation_id).to eq('findPets')
+    end
+  end
+
   describe '#description' do
     it 'returns the endpoint description' do
       expect(@endpoint.description).to include('Returns all pets from the system')
@@ -31,7 +37,7 @@ RSpec.describe OasParser::Endpoint do
 
   describe '#parameters' do
     it 'returns the endpoint parameters' do
-      allow(@path).to receive(:raw) {{ 'parameters' => [{}] }}
+      allow(@path).to receive(:raw) { { 'parameters' => [{}] } }
       expect(@endpoint.parameters.count).to eq(3)
       expect(@endpoint.parameters[0].class).to eq(OasParser::Parameter)
     end
@@ -186,7 +192,7 @@ RSpec.describe OasParser::Endpoint do
     end
 
     it 'returns a RequestBody when there is a request_body' do
-      allow(@endpoint).to receive(:raw) {{ 'requestBody' => {} }}
+      allow(@endpoint).to receive(:raw) { { 'requestBody' => {} } }
       expect(@endpoint.request_body.class).to eq(OasParser::RequestBody)
     end
   end
@@ -213,9 +219,9 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an unknown status' do
       it 'raises an exception' do
-        expect {
+        expect do
           @endpoint.response_by_code('foo')
-        }.to raise_error(OasParser::ResponseCodeNotFound, "Response code not found: 'foo'")
+        end.to raise_error(OasParser::ResponseCodeNotFound, "Response code not found: 'foo'")
       end
     end
   end
@@ -227,9 +233,9 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid name' do
       it 'raises an exception' do
-        expect {
+        expect do
           @endpoint.parameter_by_name('foo')
-        }.to raise_error(OasParser::ParameterNotFound, "Parameter not found: 'foo'")
+        end.to raise_error(OasParser::ParameterNotFound, "Parameter not found: 'foo'")
       end
     end
   end
@@ -247,9 +253,9 @@ RSpec.describe OasParser::Endpoint do
 
     context 'when given an invalid name' do
       it 'raises an exception' do
-        expect {
+        expect do
           @endpoint.callback_by_name('foo')
-        }.to raise_error(OasParser::CallbackNotFound, "Callback not found: 'foo'")
+        end.to raise_error(OasParser::CallbackNotFound, "Callback not found: 'foo'")
       end
     end
   end

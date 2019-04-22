@@ -15,6 +15,10 @@ module OasParser
       path.definition
     end
 
+    def operation_id
+      operationId
+    end
+
     def parameters
       security_schema_parameters + local_parameters + path.parameters
     end
