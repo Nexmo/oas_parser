@@ -31,18 +31,18 @@ module OasParser
     end
 
     def expand_refs(fragment, current_path)
-      if fragment.is_a?(Hash) && fragment.key?("$ref")
-        ref = fragment["$ref"]
+      unless fragment.is_a?(Hash) && fragment.key?("$ref")
+        return [fragment, current_path]
+      end
 
-        if ref =~ /^#/
-          expand_pointer(ref, current_path)
-        elsif ref =~ /^(http(s)?|\/\/)/
-          expand_url(ref)
-        else
-          expand_file(ref)
-        end
+      ref = fragment["$ref"]
+
+      if ref =~ /^#/
+        expand_pointer(ref, current_path)
+      elsif ref =~ /^(http(s)?|\/\/)/
+        expand_url(ref)
       else
-        [fragment, current_path]
+        expand_file(ref)
       end
     end
 
