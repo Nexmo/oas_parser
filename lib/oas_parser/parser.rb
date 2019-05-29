@@ -11,38 +11,38 @@ module OasParser
     end
 
     def resolve
-      deeply_expand_refs(@content)
+      deeply_expand_refs(@content, nil)
     end
 
     private
 
-    def deeply_expand_refs(fragment)
-      fragment = expand_refs(fragment)
+    def deeply_expand_refs(fragment, path)
+      fragment, current_path = expand_refs(fragment, path)
 
       if fragment.is_a?(Hash)
         fragment.reduce({}) do |hash, (k, v)|
-          hash.merge(k => deeply_expand_refs(v))
+          hash.merge(k => deeply_expand_refs(v, "#{current_path}/#{k}"))
         end
       elsif fragment.is_a?(Array)
-        fragment.map { |e| deeply_expand_refs(e) }
+        fragment.map { |e| deeply_expand_refs(e, current_path) }
       else
         fragment
       end
     end
 
-    def expand_refs(fragment)
-      if fragment.is_a?(Hash) && fragment.has_key?("$ref")
+    def expand_refs(fragment, current_path)
+      if fragment.is_a?(Hash) && fragment.key?("$ref")
         ref = fragment["$ref"]
 
         if ref =~ /^#/
-          expand_pointer(ref)
+          expand_pointer(ref, current_path)
         elsif ref =~ /^(http(s)?|\/\/)/
           expand_url(ref)
         else
           expand_file(ref)
         end
       else
-        fragment
+        [fragment, current_path]
       end
     end
 
@@ -59,11 +59,15 @@ module OasParser
       resolved_remote_reference
     end
 
-    def expand_pointer(ref, content=nil)
+    def expand_pointer(ref, current_path)
       pointer = OasParser::Pointer.new(ref)
-      fragment = pointer.resolve(content || @content)
 
-      expand_refs(fragment)
+      if pointer.circular_reference?(current_path)
+        { "$ref" => ref }
+      else
+        fragment = pointer.resolve(@content)
+        expand_refs(fragment, current_path + pointer.escaped_pointer)
+      end
     end
 
     def expand_url(ref)
