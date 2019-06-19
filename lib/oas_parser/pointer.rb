@@ -12,7 +12,28 @@ module OasParser
       end
     end
 
-    private
+    # Detect circular reference by checking whether the ref exists in current path.
+    #
+    # Example:
+    # components:
+    #   schemas:
+    #     Pet:
+    #       type: object
+    #       properties:
+    #         name:
+    #           type: string
+    #         children:
+    #           type: array
+    #           items: # <--- parsing here
+    #             - $ref: '#/components/schemas/Pet'
+    #
+    # path: "/components/schemas/Pet/properties/children/items"
+    # raw_pointer: "#/components/schemas/Pet"
+    #
+    # It'd return true when we're parsing the pet children items where the ref points back to itself.
+    def circular_reference?(path)
+      path.include?("#{escaped_pointer}/")
+    end
 
     def escaped_pointer
       if @raw_pointer.start_with?("#")
@@ -21,6 +42,8 @@ module OasParser
         @raw_pointer
       end
     end
+
+    private
 
     def parse_token(token)
       if token =~ /\A\d+\z/
