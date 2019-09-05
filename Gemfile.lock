@@ -6,19 +6,21 @@ PATH
       addressable (~> 2.3)
       builder (~> 3.2.3)
       deep_merge (~> 1.2.1)
+      hash-deep-merge
       mustermann-contrib (~> 1.0.3s)
       nokogiri
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.3)
+    activesupport (6.0.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.6.0)
-      public_suffix (>= 2.0.2, < 4.0)
+      zeitwerk (~> 2.1, >= 2.1.8)
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
     builder (3.2.3)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
@@ -42,6 +44,7 @@ GEM
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
     hansi (0.2.0)
+    hash-deep-merge (0.1.1)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     json (2.1.0)
@@ -58,7 +61,7 @@ GEM
       hansi (~> 0.2.0)
       mustermann (= 1.0.3)
     nenv (0.3.0)
-    nokogiri (1.10.1)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
@@ -66,7 +69,7 @@ GEM
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    public_suffix (3.0.3)
+    public_suffix (4.0.1)
     rake (10.5.0)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
@@ -97,6 +100,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    zeitwerk (2.1.9)
 
 PLATFORMS
   ruby

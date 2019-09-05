@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "builder", "~> 3.2.3"
   spec.add_dependency "mustermann-contrib", "~> 1.0.3s"
   spec.add_dependency "nokogiri"
+  spec.add_dependency "hash-deep-merge"
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "guard-rspec", "~> 4.7.3"

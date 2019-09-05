@@ -1,0 +1,64 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  description: A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://petstore.swagger.io/api
+paths:
+  /pets:
+    post:
+      description: Creates a new pet in the store. Duplicates are allowed
+      requestBody:
+        description: Pet to add to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                details:
+                  oneOf:
+                    - $ref: "#/components/schemas/RealName"
+                    - $ref: "#/components/schemas/NickName"
+
+      responses:
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                properties:
+                  done:
+                    type: string
+                    example: "Done"
+components:
+  schemas:
+    Age:
+      type: object
+      properties:
+        age:
+          type: integer
+          example: 12
+          description: How old's your dog?
+    RealName:
+      allOf:
+        - $ref: "#/components/schemas/Age"
+        - type: object
+          properties:
+            realname:
+              type: string
+              example: Fido
+              description: What's your dog's real name?
+    NickName:
+      allOf:
+        - $ref: "#/components/schemas/Age"
+        - type: object
+          properties:
+            nickname:
+              type: string
+              example: SillyDog
+              description: What do you call your dog when it's being silly?
