@@ -20,6 +20,14 @@ module OasParser
     end
 
     def convert_property_schema_to_properties(schema)
+      if schema['allOf']
+        schema['properties'] = {}
+        schema['allOf'].each do |p|
+          schema['properties'].deep_merge!(p['properties'])
+        end
+        schema.delete('allOf')
+      end
+
       if schema['oneOf']
         schema['oneOf'].map do |subschema|
           subschema['properties'] = convert_property_schema_to_properties(subschema)
