@@ -1,0 +1,197 @@
+openapi: "3.0.0"
+info:
+  version: 2.0.0
+  title: Nexmo Reports API
+  description: >
+    Nexmo's Reports API allows you to request a report of activity on your Nexmo account.
+    On average the Reports API takes 25 to 35 minutes to generate 1 million records. We recommend to request reports up to a maximum of 20 million records by setting the start and end dates accordingly.
+  contact:
+    name: Nexmo.com
+    email: devrel@nexmo.com
+    url: 'https://developer.nexmo.com/'
+    x-twitter: Nexmo
+  x-label: Beta
+  termsOfService: 'https://www.nexmo.com/terms-of-use'
+  license:
+    name: The MIT License (MIT)
+    url: 'https://opensource.org/licenses/MIT'
+  x-logo:
+    url: 'https://twitter.com/Nexmo/profile_image?size=original'
+  x-apiClientRegistration: 'https://dashboard.nexmo.com/sign-up'
+servers:
+  - url: https://api.nexmo.com
+paths:
+  "/v2/reports":
+    post:
+      summary: Create a report
+      description: Request a report on your account activity
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/SMS'
+                - $ref: '#/components/schemas/VOICE-CALL'
+              discriminator:
+                propertyName: product
+      responses: {}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    basicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    product:
+      type: string
+      description: Which product you wish to generate a report for.
+      example: "SMS"
+      enum:
+        - SMS
+        - VOICE-CALL
+        - VERIFY-API
+        - NUMBER-INSIGHT
+        - VERIFY-SDK      # to be deprecated
+    direction:
+      type: string
+      description: "Direction of the request, either incoming or outgoing."
+      enum:
+        - inbound
+        - outbound
+      example:
+        outbound
+    account_id:
+      type: string
+      description: The account ID you wish to search for (especially useful for searching for subaccounts),
+      example: "abcdef01"
+    include_subaccounts:
+      type: boolean
+      description: Whether to include subaccounts or not. Defaults to false.
+      enum:
+        - true
+        - false
+      example: "false"
+      default: false
+    callback_url:
+      type: string
+      description: URL to send a callback to upon completion of the report creation.
+      format: uri
+      example: "https://requestb.in/12345"
+    date_start:
+      type: string
+      format: date
+      description: "ISO 8601 formatted date for when reports should begin. If unspecified, defaults to seven days ago."
+      example: "2017-12-24:00:00+0000"
+    date_end:
+      type: string
+      format: date
+      description: "ISO 8601 formatted date for when report should end. If unspecified, defaults to the current time."
+      example: "2017-12-31T23:59:59+0000"
+    client_ref:
+      type: string
+      description: Search only for messages with this `client_ref`.
+      maxLength: 40
+      minLength: 40
+    account_ref:
+      type: string
+      description: Search only for messages with this `account_ref`.
+      maxLength: 40
+      minLength: 40
+    to:
+      type: string
+      description: Request sent to this number.
+    from:
+      type: string
+      description: Request send from this number.
+    sms_status:
+      type: string
+      description: Search only for sms with the corresponding status.
+      enum:
+        - delivered
+        - expired
+        - failed
+        - rejected
+        - accepted
+        - buffered
+        - unknown
+      example:
+        delivered
+    voice_status:
+      type: string
+      description: Search only for voice call with the corresponding status.
+      enum:
+        - started
+        - ringing
+        - answered
+        - machine
+        - completed
+        - timeout
+        - failed
+        - rejected
+        - cancelled
+        - busy
+    application_id:
+      type: string
+      description: Search only for requests attached to a particular Application ID.
+    conversation_id:
+      type: string
+      description: Search only for Voice calls attached to this particular Conversation. This should omit the "CON-" prefix.
+
+    report_request:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/product'
+        account_id:
+          $ref: '#/components/schemas/account_id'
+        date_start:
+          $ref: '#/components/schemas/date_start'
+        date_end:
+          $ref: '#/components/schemas/date_end'
+        include_subaccounts:
+          $ref: '#/components/schemas/include_subaccounts'
+        callback_url:
+          $ref: '#/components/schemas/callback_url'
+      required:
+        - product
+        - account_id
+      discriminator:
+        propertyName: product
+
+    SMS:
+      type: object
+      properties:
+        direction:
+          $ref: '#/components/schemas/direction'
+        status:
+          $ref: '#/components/schemas/sms_status'
+        client_ref:
+          $ref: '#/components/schemas/client_ref'
+        account_ref:
+          $ref: '#/components/schemas/account_ref'
+      required:
+        - product
+        - account_id
+        - direction
+
+    VOICE-CALL:
+      allOf:
+        - $ref: '#/components/schemas/report_request'
+        - type: object
+          properties:
+            direction:
+              $ref: '#/components/schemas/direction'
+            to:
+              $ref: '#/components/schemas/to'
+            from:
+              $ref: '#/components/schemas/from'
+            status:
+              $ref: '#/components/schemas/voice_status'

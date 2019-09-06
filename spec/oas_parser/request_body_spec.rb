@@ -31,4 +31,37 @@ RSpec.describe OasParser::RequestBody do
       expect(subject[0].class).to eq(OasParser::Property)
     end
   end
+
+  describe 'oneOf / allOf handling' do
+    # This checks for instances where an entire request body is a oneOf that contains an allOf
+    before do
+      @definition = OasParser::Definition.resolve('spec/fixtures/reports.yml')
+      @path = @definition.path_by_path('/v2/reports')
+      @endpoint = @path.endpoint_by_method('post')
+      @request_body = @endpoint.request_body
+      @schemas = @request_body.split_properties_for_format('application/json')
+      @sms_properties = @schemas[0]
+      @voice_properties = @schemas[1]
+    end
+
+    it 'returns all items in oneOf that are not an allOf (sms)' do
+      expect(@sms_properties[0].name).to eq('direction')
+      expect(@sms_properties[1].name).to eq('status')
+      expect(@sms_properties[2].name).to eq('client_ref')
+      expect(@sms_properties[3].name).to eq('account_ref')
+    end
+
+    it 'returns all items in oneOf that are an allOf (voice)' do
+      expect(@voice_properties[0].name).to eq('product')
+      expect(@voice_properties[1].name).to eq('account_id')
+      expect(@voice_properties[2].name).to eq('date_start')
+      expect(@voice_properties[3].name).to eq('date_end')
+      expect(@voice_properties[4].name).to eq('include_subaccounts')
+      expect(@voice_properties[5].name).to eq('callback_url')
+      expect(@voice_properties[6].name).to eq('direction')
+      expect(@voice_properties[7].name).to eq('to')
+      expect(@voice_properties[8].name).to eq('from')
+      expect(@voice_properties[9].name).to eq('status')
+    end
+  end
 end

@@ -11,17 +11,31 @@ module OasParser
     end
 
     def properties_for_format(format)
-      schema(format)['properties'].map do |name, definition|
-        OasParser::Property.new(self, schema(format), name, definition)
+      s = schema(format)
+      s = handle_all_of(s)
+      s['properties'].map do |name, definition|
+        OasParser::Property.new(self, s, name, definition)
       end
     end
 
     def split_properties_for_format(format)
       split_schemas(format).map do |schema|
+        schema = handle_all_of(schema)
         schema['properties'].map do |name, definition|
           OasParser::Property.new(self, schema(format), name, definition)
         end
       end
+    end
+
+    def handle_all_of(schema)
+      if schema['allOf']
+        schema['properties'] = {}
+        schema['allOf'].each do |p|
+          schema['properties'].deep_merge!(p['properties'])
+        end
+        schema.delete('allOf')
+      end
+      schema
     end
   end
 end
