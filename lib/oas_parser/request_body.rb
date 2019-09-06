@@ -29,9 +29,8 @@ module OasParser
 
     def handle_all_of(schema)
       if schema['allOf']
-        schema['properties'] = {}
         schema['allOf'].each do |p|
-          schema['properties'].deep_merge!(p['properties'])
+          schema.deep_merge!(p)
         end
         schema.delete('allOf')
       end
