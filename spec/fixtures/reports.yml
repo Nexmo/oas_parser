@@ -38,7 +38,28 @@ paths:
                 - $ref: '#/components/schemas/VOICE-CALL'
               discriminator:
                 propertyName: product
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  reports:
+                    type: array
+                    description: The list of reports.
+                    items:
+                      oneOf:
+                        - type: object
+                          properties:
+                            hello:
+                              type: string
+                              example: world
+                        - type: object
+                          properties:
+                            nexmo:
+                              type: string
+                              example: rocks
 components:
   securitySchemes:
     bearerAuth:
