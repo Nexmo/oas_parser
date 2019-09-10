@@ -136,6 +136,15 @@ module OasParser
         end
       end
 
+      if object['items'] && object['items']['oneOf']
+        items = object['items']['oneOf'].map do |obj|
+          route(obj)
+        end
+
+        items.push({ '__array_attributes' => attributes }) if attributes.any? && @mode == 'xml'
+        return items
+      end
+
       case object['items']['type']
       when 'object'
         if attributes.any? && @mode == 'xml'
@@ -145,19 +154,13 @@ module OasParser
         end
       else
         if object['items']
-          if object['items']['oneOf']
-            object['items']['oneOf'].map do |obj|
-              route(obj)
-            end
+          # Handle objects with missing type
+          object['items']['type'] = 'object'
+          if @mode == 'xml'
+            [parse_object(object['items']), { '__array_attributes' => attributes }]
           else
-            # Handle objects with missing type
-            object['items']['type'] = 'object'
-            if @mode == 'xml'
-              [parse_object(object['items']), { '__array_attributes' => attributes }]
-            else
-              [parse_object(object['items'])]
-            end
-            end
+            [parse_object(object['items'])]
+          end
         else
           raise StandardError.new("parse_array: Don't know how to parse object")
         end
