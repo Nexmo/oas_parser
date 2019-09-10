@@ -69,6 +69,8 @@ module OasParser
         parse_object(root_object)
       when 'array' then parse_array(root_object)
       when 'string' then root_object['example']
+      when 'integer' then root_object['example']
+      when 'number' then root_object['example']
       when nil
         return nil if root_object['additionalProperties'] == false
         return nil if root_object['properties'] == {}
@@ -143,13 +145,19 @@ module OasParser
         end
       else
         if object['items']
-          # Handle objects with missing type
-          object['items']['type'] = 'object'
-          if @mode == 'xml'
-            [parse_object(object['items']), { '__array_attributes' => attributes }]
+          if object['items']['oneOf']
+            object['items']['oneOf'].map do |obj|
+              route(obj)
+            end
           else
-            [parse_object(object['items'])]
-          end
+            # Handle objects with missing type
+            object['items']['type'] = 'object'
+            if @mode == 'xml'
+              [parse_object(object['items']), { '__array_attributes' => attributes }]
+            else
+              [parse_object(object['items'])]
+            end
+            end
         else
           raise StandardError.new("parse_array: Don't know how to parse object")
         end

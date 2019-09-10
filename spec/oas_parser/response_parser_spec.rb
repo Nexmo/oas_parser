@@ -321,4 +321,62 @@ RSpec.describe OasParser::ResponseParser do
       end
     end
   end
+
+  describe 'supports oneOf inside an array' do
+    it 'handles objects' do
+      schema = {"properties"=>{"reports"=>{"type"=>"array", "description"=>"The list of reports.", "items"=>{"oneOf"=>[
+          {"type"=>"object", "properties"=>{"hello"=>{"type"=>"string", "example"=>"world"}}},
+          {"type"=>"object", "properties"=>{"nexmo"=>{"type"=>"string", "example"=>"rocks"}}}
+      ]}}}}
+
+      response = OasParser::ResponseParser.new(schema).json
+      j = JSON.parse(response);
+
+      expect(j['reports'][0]['hello']).to eq('world')
+      expect(j['reports'][1]['nexmo']).to eq('rocks')
+    end
+
+    it 'handles strings' do
+      schema = {"properties"=>{"reports"=>{"type"=>"array", "description"=>"The list of reports.", "items"=>{"oneOf"=>[
+          {"type"=>"string", "example" => "Hello" },
+          {"type"=>"string", "example" => "World" }
+      ]}}}}
+
+      response = OasParser::ResponseParser.new(schema).json
+      j = JSON.parse(response);
+
+      expect(j['reports'][0]).to eq('Hello')
+      expect(j['reports'][1]).to eq('World')
+    end
+
+     it 'handles numbers' do
+      schema = {"properties"=>{"reports"=>{"type"=>"array", "description"=>"The list of reports.", "items"=>{"oneOf"=>[
+          {"type"=>"number", "example" => 1.1 },
+          {"type"=>"integer", "example" => 2 }
+      ]}}}}
+
+      response = OasParser::ResponseParser.new(schema).json
+      j = JSON.parse(response);
+
+      expect(j['reports'][0]).to eq(1.1)
+      expect(j['reports'][1]).to eq(2)
+     end
+
+     it 'handles mixed content' do
+      schema = {"properties"=>{"reports"=>{"type"=>"array", "description"=>"The list of reports.", "items"=>{"oneOf"=>[
+          {"type"=>"number", "example" => 1.1 },
+          {"type"=>"integer", "example" => 2 },
+          {"type"=>"string", "example" => "Hello" },
+          {"type"=>"object", "properties"=>{"nexmo"=>{"type"=>"string", "example"=>"rocks"}}}
+      ]}}}}
+
+      response = OasParser::ResponseParser.new(schema).json
+      j = JSON.parse(response);
+
+      expect(j['reports'][0]).to eq(1.1)
+      expect(j['reports'][1]).to eq(2)
+      expect(j['reports'][2]).to eq('Hello')
+      expect(j['reports'][3]['nexmo']).to eq('rocks')
+    end
+  end
 end
