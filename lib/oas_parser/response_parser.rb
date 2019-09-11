@@ -136,8 +136,9 @@ module OasParser
         end
       end
 
-      if object['items'] && object['items']['oneOf']
-        items = object['items']['oneOf'].map do |obj|
+      if object['items'] && (object['items']['oneOf'] || object['items']['anyOf'])
+        key = object['items']['oneOf'] ? 'oneOf' : 'anyOf'
+        items = object['items'][key].map do |obj|
           route(obj)
         end
 
