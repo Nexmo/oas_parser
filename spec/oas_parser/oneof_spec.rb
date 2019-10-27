@@ -28,4 +28,23 @@ RSpec.describe OasParser::Parameter do
       expect(realname.description).to eq("What's your dog's real name?")
     end
   end
+
+  describe '#required' do
+    before do
+      @definition = OasParser::Definition.resolve('spec/fixtures/reports.yml')
+      @path = @definition.path_by_path('/v2/reports')
+      @endpoint = @path.endpoint_by_method('post')
+      @request_body = @endpoint.request_body
+      @properties = @request_body.split_properties_for_format('application/json')[1]
+      @product_property = @properties[0]
+      @account_property = @properties[1]
+      @date_start_property = @properties[2]
+    end
+
+    it 'handles required fields in a request body' do
+      expect(@product_property.required).to be(true)
+      expect(@account_property.required).to be(true)
+      expect(@date_start_property.required).to be(false)
+    end
+  end
 end

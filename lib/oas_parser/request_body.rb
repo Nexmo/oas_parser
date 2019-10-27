@@ -22,7 +22,7 @@ module OasParser
       split_schemas(format).map do |schema|
         schema = handle_all_of(schema)
         schema['properties'].map do |name, definition|
-          OasParser::Property.new(self, schema(format), name, definition)
+          OasParser::Property.new(self, schema, name, definition)
         end
       end
     end
