@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    oas_parser (0.22.3)
+    oas_parser (0.22.4)
       activesupport (>= 4.0.0)
       addressable (~> 2.3)
       builder (~> 3.2.3)
@@ -45,7 +45,7 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     hansi (0.2.0)
     hash-deep-merge (0.1.1)
-    i18n (1.6.0)
+    i18n (1.7.0)
       concurrent-ruby (~> 1.0)
     json (2.1.0)
     listen (3.1.5)
@@ -55,7 +55,7 @@ GEM
     lumberjack (1.0.13)
     method_source (0.9.2)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
+    minitest (5.12.2)
     mustermann (1.0.3)
     mustermann-contrib (1.0.3)
       hansi (~> 0.2.0)
@@ -100,7 +100,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    zeitwerk (2.1.10)
+    zeitwerk (2.2.0)
 
 PLATFORMS
   ruby
