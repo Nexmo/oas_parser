@@ -29,6 +29,9 @@ RSpec.describe OasParser::Response do
       allow(@response).to receive(:code) { '200' }
       expect(@response.success?).to eq(true)
 
+      allow(@response).to receive(:code) { 200 }
+      expect(@response.success?).to eq(true)
+
       allow(@response).to receive(:code) { '201' }
       expect(@response.success?).to eq(true)
 
