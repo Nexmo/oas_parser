@@ -1,3 +1,3 @@
 module OasParser
-  VERSION = '0.22.4'.freeze
+  VERSION = '0.23.0'.freeze
 end

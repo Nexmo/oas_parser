@@ -46,11 +46,7 @@ module OasParser
     private
 
     def parse_token(token)
-      if token =~ /\A\d+\z/
-        token.to_i
-      else
-        token.gsub("~0", "~").gsub("~1", "/")
-      end
+      token.gsub("~0", "~").gsub("~1", "/")
     end
 
     def tokens
