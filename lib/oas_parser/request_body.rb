@@ -28,13 +28,34 @@ module OasParser
     end
 
     def handle_all_of(schema)
+      newSchema = {}
       if schema['allOf']
         schema['allOf'].each do |p|
-          schema.deep_merge!(p)
+          newSchema = deep_safe_merge(newSchema, p)
+          if newSchema['allOf']
+            newSchema = deep_safe_merge(newSchema, handle_all_of(newSchema))
+            newSchema.delete('allOf')
+          end
         end
-        schema.delete('allOf')
+      else
+        newSchema = schema
       end
-      schema
+
+      newSchema
     end
+
+     def deep_safe_merge(source_hash, new_hash)
+       source_hash.merge(new_hash) do |key, old, new|
+         if new.respond_to?(:blank) && new.blank?
+           old
+         elsif (old.kind_of?(Hash) and new.kind_of?(Hash))
+           old.deep_merge(new)
+         elsif (old.kind_of?(Array) and new.kind_of?(Array))
+           old.concat(new).uniq
+         else
+           new
+         end
+       end
+     end
   end
 end
