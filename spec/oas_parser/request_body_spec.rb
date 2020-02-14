@@ -63,5 +63,30 @@ RSpec.describe OasParser::RequestBody do
       expect(@voice_properties[8].name).to eq('from')
       expect(@voice_properties[9].name).to eq('status')
     end
+
   end
+
+  describe 'allOf recursive' do
+    before do
+      @definition = OasParser::Definition.resolve('spec/fixtures/petstore-recursive-allOf.yml')
+      @path = @definition.path_by_path('/pet')
+      @endpoint = @path.endpoint_by_method('post')
+      @request_body = @endpoint.request_body
+      @properties = @request_body.properties_for_format('application/json')
+    end
+
+    it 'handles multi-depth allOf values' do
+      expect(@properties[0].name).to eq('name')
+      expect(@properties[1].name).to eq('price')
+      expect(@properties[2].name).to eq('age')
+    end
+
+    it 'merges required list' do
+      expect(@properties[0].required).to eq(true)
+      expect(@properties[1].required).to eq(true)
+    end
+
+  end
+
+
 end

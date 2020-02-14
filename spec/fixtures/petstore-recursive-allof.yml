@@ -1,0 +1,54 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  description: A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: foo@example.com
+    url: http://madskristensen.net
+  license:
+    name: MIT
+    url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
+servers:
+  - url: http://petstore.swagger.io/api
+paths:
+  /pet:
+    post:
+      description: Create pet
+      operationId: makePet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/AllPets'
+                - type: object
+                  properties:
+                    age:
+                      type: integer
+      responses:
+        '200':
+          description: Success
+
+components:
+  schemas:
+    BasicPet:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    ExpensivePet:
+      type: object
+      required:
+        - price
+      properties:
+        price:
+          type: integer
+    AllPets:
+      allOf:
+        - $ref: '#/components/schemas/BasicPet'
+        - $ref: '#/components/schemas/ExpensivePet'
