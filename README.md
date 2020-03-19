@@ -1,5 +1,7 @@
 # Open API Definition Parser
 
+<img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
+
 A Ruby parser for Open API Spec 3.0+ definitions.
 
 ### Install
