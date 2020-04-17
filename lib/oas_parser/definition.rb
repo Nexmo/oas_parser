@@ -47,5 +47,12 @@ module OasParser
     def endpoints
       paths.flat_map(&:endpoints)
     end
+
+    def webhooks
+      return [] unless raw['webhooks']
+      raw['webhooks'].map do |name, definition|
+        OasParser::Webhook.new(self, name, definition)
+      end
+    end
   end
 end

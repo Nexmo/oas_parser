@@ -76,4 +76,14 @@ RSpec.describe OasParser::Definition do
       end
     end
   end
+
+  describe '#webhooks' do
+    it 'handles specs with no webhooks' do
+      expect(@definition.webhooks.count).to eq(0)
+    end
+    it 'returns a list of webhooks' do
+      definition = OasParser::Definition.resolve('spec/fixtures/petstore-webhooks.yml')
+      expect(definition.webhooks[0].class).to eq(OasParser::Webhook)
+    end
+  end
 end
