@@ -30,8 +30,8 @@ module OasParser
 
       if schema['oneOf']
         schema['oneOf'].map do |subschema|
-          subschema['properties'] = convert_property_schema_to_properties(subschema)
           subschema['subschema_property'] = true
+          subschema['properties'] = convert_property_schema_to_properties(subschema)
           subschema
         end
       elsif schema['subschema_property']
