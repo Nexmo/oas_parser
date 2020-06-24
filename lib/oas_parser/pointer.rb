@@ -8,6 +8,7 @@ module OasParser
       return document if escaped_pointer == ""
 
       tokens.reduce(document) do |nested_doc, token|
+        token = token.to_i if token[/^-?\d+$/]
         nested_doc.fetch(token)
       end
     end
