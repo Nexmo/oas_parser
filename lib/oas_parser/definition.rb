@@ -49,16 +49,18 @@ module OasParser
     end
 
     def webhooks
+      return [] unless raw['webhooks'] || raw['x-webhooks']
+
       if raw['webhooks']
         return raw['webhooks'].map do |name, definition|
           OasParser::Webhook.new(self, name, definition)
         end
-      elsif raw['x-webhooks']
+      end
+
+      if raw['x-webhooks']
         return raw['x-webhooks'].map do |name, definition|
           OasParser::Webhook.new(self, name, definition)
         end
-      else
-        return []
       end
     end
   end
