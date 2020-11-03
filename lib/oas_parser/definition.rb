@@ -52,13 +52,13 @@ module OasParser
       return [] unless raw['webhooks'] || raw['x-webhooks']
 
       if raw['webhooks']
-        return raw['webhooks'].map do |name, definition|
+        raw['webhooks'].map do |name, definition|
           OasParser::Webhook.new(self, name, definition)
         end
       end
 
       if raw['x-webhooks']
-        return raw['x-webhooks'].map do |name, definition|
+        raw['x-webhooks'].map do |name, definition|
           OasParser::Webhook.new(self, name, definition)
         end
       end
