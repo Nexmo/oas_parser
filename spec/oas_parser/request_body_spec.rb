@@ -68,7 +68,7 @@ RSpec.describe OasParser::RequestBody do
 
   describe 'allOf recursive' do
     before do
-      @definition = OasParser::Definition.resolve('spec/fixtures/petstore-recursive-allOf.yml')
+      @definition = OasParser::Definition.resolve('spec/fixtures/petstore-recursive-allof.yml')
       @path = @definition.path_by_path('/pet')
       @endpoint = @path.endpoint_by_method('post')
       @request_body = @endpoint.request_body
