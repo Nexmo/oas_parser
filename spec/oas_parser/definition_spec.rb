@@ -57,6 +57,21 @@ RSpec.describe OasParser::Definition do
     end
   end
 
+  describe '#tags' do
+    it 'returns an empty array when not defined' do
+      expect(@definition.tags).to eq([])
+    end
+
+    it 'returns an array of tags' do
+      definition = OasParser::Definition.resolve('spec/fixtures/petstore-with-tags.yml')
+
+      expect(definition.tags).to eq([
+        { 'name' => 'Mammal' },
+        { 'name' => 'Reptile', 'description' => 'any kind of reptile' }
+      ])
+    end
+  end
+
   describe '#path_by_path' do
     it 'allows for a path to be retrived by its path' do
       expect(@definition.path_by_path('/pets').class).to eq(OasParser::Path)
