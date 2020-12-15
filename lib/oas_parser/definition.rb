@@ -44,6 +44,10 @@ module OasParser
       raw['security'] || []
     end
 
+    def tags
+      raw['tags'] || []
+    end
+
     def endpoints
       paths.flat_map(&:endpoints)
     end
