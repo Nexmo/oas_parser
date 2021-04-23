@@ -14,7 +14,6 @@ module OasParser
     end
 
     def required
-      return true if raw['required']
       return false unless schema['required']
       schema['required'].include? name
     end

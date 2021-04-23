@@ -15,12 +15,36 @@ RSpec.describe OasParser::Property do
 
   describe '#required' do
     it 'returns a boolean' do
-      allow(@property).to receive(:name) { 'foo' }
-      allow(@property).to receive(:schema) { { 'required' => ['foo'] } }
+      expect(@property.name).to eq('name')
       expect(@property.required).to eq(true)
 
       allow(@property).to receive(:schema) { { required: [] } }
       expect(@property.required).to eq(false)
+    end
+
+    context 'with nested objects' do
+      before do
+        @definition = OasParser::Definition.resolve('spec/fixtures/voice.yml')
+        @path = @definition.path_by_path('/')
+        @endpoint = @path.endpoint_by_method('post')
+        @request_body = @endpoint.request_body
+        @schemas = @request_body.split_properties_for_format('application/json')
+      end
+
+      it 'marks the right properties as required' do
+        to = @schemas[0][1]
+        expect(to.name).to eq('to')
+        expect(to.required).to eq(true)
+
+        from = @schemas[0][2]
+        expect(from.name).to eq('from')
+        expect(from.required).to eq(false)
+
+        expect(from.properties[0].name).to eq('type')
+        expect(from.properties[0].required).to eq(true)
+        expect(from.properties[1].name).to eq('number')
+        expect(from.properties[1].required).to eq(false)
+      end
     end
   end
 
