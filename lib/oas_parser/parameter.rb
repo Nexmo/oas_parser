@@ -1,7 +1,7 @@
 module OasParser
   class Parameter < AbstractAttribute
     raw_keys :in, :description, :style, :schema,
-             :minimum, :maximum, :required
+             :minimum, :maximum, :required, :nullable
 
     attr_accessor :owner, :raw
 
@@ -29,6 +29,10 @@ module OasParser
 
     def default
       raw['default'] || (schema ? schema['default'] : nil)
+    end
+
+    def nullable?
+      raw['nullable'] || (schema ? schema['nullable'] : nil )
     end
 
     def convert_property_schema_to_properties(schema)
