@@ -1,7 +1,7 @@
 module OasParser
   class Property < AbstractAttribute
     raw_keys :description, :type, :format, :minimum, :maximum,
-             :example, :default, :items
+             :example, :default, :items, :nullable
 
     attr_accessor :owner, :schema, :raw
     attr_writer :name
@@ -16,6 +16,11 @@ module OasParser
     def required
       return false unless schema['required']
       schema['required'].include? name
+    end
+
+    def nullable?
+      return true if raw['nullable']
+      return false unless schema['nullable']
     end
 
     def convert_property_schema_to_properties(schema)
