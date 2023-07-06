@@ -1,3 +1,7 @@
+# ⚠️ This repository is no longer maintained.
+
+---
+
 # Open API Definition Parser
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
