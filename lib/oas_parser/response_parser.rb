@@ -92,7 +92,7 @@ module OasParser
 
       if object['allOf']
         merged_object = { 'type' => 'object' }
-        object['allOf'].each { |o| merged_object.deep_merge!(o) }
+        object['allOf'].each { |o| merged_object.deeper_merge!(o) }
         return parameter_value(merged_object)
       elsif object['properties']
         o = {}

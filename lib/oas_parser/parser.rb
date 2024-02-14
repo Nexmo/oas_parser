@@ -1,7 +1,7 @@
 module OasParser
   class Parser
     def self.resolve(path)
-      content = YAML.load_file(path)
+      content = YAML.load_file(path, permitted_classes: [Time])
       Parser.new(path, content).resolve
     end
 
