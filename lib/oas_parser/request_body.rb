@@ -49,7 +49,7 @@ module OasParser
          if new.respond_to?(:blank) && new.blank?
            old
          elsif (old.kind_of?(Hash) and new.kind_of?(Hash))
-           old.deep_merge(new)
+           old.deeper_merge(new)
          elsif (old.kind_of?(Array) and new.kind_of?(Array))
            old.concat(new).uniq
          else

@@ -2,11 +2,12 @@ require 'json'
 require 'uri'
 require 'yaml'
 require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/array/conversions'
 require 'active_support/core_ext/hash/conversions'
 require 'nokogiri'
 
 require 'addressable/uri'
-require 'deep_merge'
+require 'deep_merge/rails_compat'
 
 require_relative 'oas_parser/path.rb'
 require_relative 'oas_parser/payload.rb'
